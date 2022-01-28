@@ -38,7 +38,7 @@ export class Board extends Component<Props, State> {
                 <Button
                     className="mt-4"
                     variant="primary"
-                    onClick={() => this.spawnSnake()}
+                    onClick={() => this.spawnSnakeAndPellet()}
                 >
                     Start Game
                 </Button>
@@ -50,14 +50,36 @@ export class Board extends Component<Props, State> {
         return this.state.cells.some((c) => c === "Snake");
     }
 
-    private spawnSnake() {
+    private isPelletSpawned() {
+        return this.state.cells.some((c) => c === "Pellet");
+    }
+
+    private spawnSnakeAndPellet() {
+        const cells = this.state.cells.slice();
+        this.spawnSnake(cells);
+        this.spawnPellet(cells);
+        this.setState({ cells });
+    }
+
+    private spawnSnake(cells: CellType[]) {
         if (this.isSnakeSpawned()) {
             return;
         }
 
-        const cells = this.state.cells.slice();
         cells.splice(55, 3, "Snake", "Snake", "Snake");
-        this.setState({ cells });
+    }
+
+    private spawnPellet(cells: CellType[]) {
+        if (this.isPelletSpawned()) {
+            return;
+        }
+
+        let i: number;
+        do {
+            i = randomNumberBetween(0, this.area - 1);
+        } while (cells[i] !== "Empty");
+
+        cells[i] = "Pellet";
     }
 
     private renderCell(i: number, unit: CellType) {
@@ -67,4 +89,8 @@ export class Board extends Component<Props, State> {
     private get area() {
         return Math.pow(this.props.size, 2);
     }
+}
+
+function randomNumberBetween(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
