@@ -2,8 +2,6 @@ import { Component, ReactElement } from "react";
 import { Cell, CellType } from "./Cell";
 import "./Board.css";
 import Button from "react-bootstrap/Button";
-import Image from "react-bootstrap/Image";
-// import { Button } from "../Controls/Button";
 
 interface Props {
     size: number;
@@ -32,27 +30,18 @@ export class Board extends Component<Props, State> {
 
         return (
             <div className="text-center">
-                <div className="row col">
-                    <h1>
-                        <Image src="logo192.png" alt="" height={75} />
-                        SnakeReact
-                    </h1>
-                </div>
                 <div className="row">
                     <div className="col">
                         <div className="board">{cells}</div>
                     </div>
                 </div>
-                <div className="row mt-4">
-                    <div className="col">
-                        <Button
-                            variant="primary"
-                            onClick={() => this.spawnSnake()}
-                        >
-                            Start Game
-                        </Button>
-                    </div>
-                </div>
+                <Button
+                    className="mt-4"
+                    variant="primary"
+                    onClick={() => this.spawnSnake()}
+                >
+                    Start Game
+                </Button>
             </div>
         );
     }
