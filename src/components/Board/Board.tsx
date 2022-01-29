@@ -2,6 +2,7 @@ import { Component } from "react";
 import { Cell, CellType } from "./Cell";
 import { Point } from "../../logic/point";
 import "./Board.css";
+import { Direction } from "readline";
 
 interface Props {
     size: number;
@@ -25,7 +26,6 @@ export class BoardComponent extends Component<Props> {
 
         return <div className="board">{cells}</div>;
     }
-
     private get area() {
         return Math.pow(this.props.size, 2);
     }

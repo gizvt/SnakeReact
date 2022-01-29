@@ -4,9 +4,15 @@ import { Point } from "./point";
 export class Snake {
     private _direction: Direction = Direction.Left;
     private readonly _points: Point[];
+    private _pelletsEaten = 0;
+    private _pelletEaten = false;
 
     constructor(points: Point[]) {
         this._points = points;
+    }
+
+    public get pelletEaten() {
+        return this._pelletEaten;
     }
 
     public get direction() {
@@ -22,20 +28,16 @@ export class Snake {
         }
     }
 
+    public get pelletsEaten() {
+        return this._pelletsEaten;
+    }
+
     public get points() {
         return this._points;
     }
 
-    private popTail() {
-        return this._points.pop();
-    }
-
     public peekHead() {
         return this._points[0];
-    }
-
-    private spawnNewHead(newHead: Point) {
-        this._points.unshift(newHead);
     }
 
     public containsPoint(other: Point) {
@@ -46,15 +48,27 @@ export class Snake {
         return this._points.filter((p) => p.equals(this.peekHead())).length > 1;
     }
 
-    public move(direction: Direction) {
+    public move(direction: Direction, pelletPoint: Point) {
         this.changeDirection(direction);
-        this.popTail();
-        let newHead = this.peekHead().move(this.direction);
-        this.spawnNewHead(newHead);
+        let newHeadPoint = this.peekHead().move(this.direction);
+
+        if (newHeadPoint.equals(pelletPoint)) {
+            this._pelletsEaten++;
+            this._pelletEaten = true;
+        } else {
+            this.popTail();
+            this._pelletEaten = false;
+        }
+
+        this.spawnNewHead(newHeadPoint);
     }
 
-    public get length(): number {
-        return this._points.length;
+    private spawnNewHead(newHead: Point) {
+        this._points.unshift(newHead);
+    }
+
+    private popTail() {
+        return this._points.pop();
     }
 
     private changeDirection(newDirection: Direction) {

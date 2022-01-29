@@ -6,6 +6,7 @@ import { Direction } from "../logic/direction";
 import { Button } from "react-bootstrap";
 import { Title } from "./Title";
 import { GameOverModal } from "./GameOverModal";
+import { Score } from "./Score";
 
 interface Props {}
 
@@ -45,9 +46,15 @@ export class App extends Component<Props, State> {
             <>
                 <GameOverModal
                     show={this.state.showGameOverModal}
+                    score={this.board.snake?.pelletsEaten || 0}
                     handleClose={() => this.handleGameOver()}
                 />
                 <Title />
+                <div className="row text-center">
+                    <div className="col">
+                        <Score score={this.board.snake?.pelletsEaten || 0} />
+                    </div>
+                </div>
                 <div className="row text-center">
                     <div className="col">
                         <BoardComponent
@@ -80,7 +87,7 @@ export class App extends Component<Props, State> {
             });
 
             await sleep(90);
-            this.board.snake!.move(this.nextDirection);
+            this.board.moveSnake(this.nextDirection);
         } while (!this.board.isInIllegalState);
 
         this.setState({ inProgress: false, showGameOverModal: true });

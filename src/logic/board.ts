@@ -34,6 +34,14 @@ export class Board {
         return Point.random(this.size);
     }
 
+    public moveSnake(direction: Direction) {
+        this.snake?.move(direction, this.pellet!.point);
+
+        if (this.snake?.pelletEaten) {
+            this.spawnPellet();
+        }
+    }
+
     spawnSnake() {
         const snakePoints = this.getSnakeSpawnPoints();
         this.snake = new Snake(snakePoints);
