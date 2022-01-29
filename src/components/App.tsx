@@ -5,6 +5,7 @@ import { Point } from "../logic/point";
 import { Direction } from "../logic/direction";
 import { Button } from "react-bootstrap";
 import { Title } from "./Title";
+import { GameOverModal } from "./GameOverModal";
 
 interface Props {}
 
@@ -12,6 +13,7 @@ interface State {
     inProgress: boolean;
     snakePoints: Point[] | null;
     pelletPoint: Point | null;
+    showGameOverModal: boolean;
 }
 
 export class App extends Component<Props, State> {
@@ -24,6 +26,7 @@ export class App extends Component<Props, State> {
             snakePoints: null,
             pelletPoint: null,
             inProgress: false,
+            showGameOverModal: false,
         };
     }
 
@@ -40,6 +43,10 @@ export class App extends Component<Props, State> {
     render() {
         return (
             <>
+                <GameOverModal
+                    show={this.state.showGameOverModal}
+                    handleClose={() => this.handleGameOver()}
+                />
                 <Title />
                 <div className="row text-center">
                     <div className="col">
@@ -63,31 +70,29 @@ export class App extends Component<Props, State> {
 
     async startGame() {
         this.setState({ inProgress: true });
-        this.spawnSnakeAndPellet();
+        this.board.spawnSnake();
+        this.board.spawnPellet();
 
         do {
+            this.setState({
+                snakePoints: this.board.snake && [...this.board.snake.points],
+                pelletPoint: this.board.pellet && this.board.pellet.point,
+            });
+
             await sleep(90);
             this.board.snake!.move(this.nextDirection);
-            this.setState({ snakePoints: [...this.board.snake!.points] });
         } while (!this.board.isInIllegalState);
 
-        alert("Game over");
+        this.setState({ inProgress: false, showGameOverModal: true });
+    }
+
+    private handleGameOver() {
         this.board.reset();
 
         this.setState({
             snakePoints: this.board.snake && this.board.snake.points,
             pelletPoint: this.board.pellet && this.board.pellet.point,
-            inProgress: false,
-        });
-    }
-
-    private spawnSnakeAndPellet() {
-        this.board.spawnSnake();
-        this.board.spawnPellet();
-
-        this.setState({
-            snakePoints: this.board.snake && this.board.snake.points,
-            pelletPoint: this.board.pellet && this.board.pellet.point,
+            showGameOverModal: false,
         });
     }
 
