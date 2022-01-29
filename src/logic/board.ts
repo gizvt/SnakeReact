@@ -13,7 +13,7 @@ export class Board {
     get isInIllegalState() {
         return (
             this.snake &&
-            (this.containsPoint(this.snake.peekHead()) ||
+            (!this.containsPoint(this.snake.peekHead()) ||
                 this.snake.hasCollidedWithSelf())
         );
     }
@@ -68,7 +68,7 @@ export class Board {
     }
 
     private containsPoint(point: Point) {
-        return point.isOutOfBounds(this.size);
+        return !point.isOutOfBounds(this.size);
     }
 
     get area() {
