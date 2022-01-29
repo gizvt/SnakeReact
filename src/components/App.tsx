@@ -12,18 +12,23 @@ interface Props {}
 
 interface State {
     board: Board;
-    nextDirections: Direction[];
+    inputQueue: Direction[];
+    inProgress: boolean;
 }
 
 export class App extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         const board = new Board(15);
-        this.state = { board, nextDirections: [] };
+        this.state = { board, inputQueue: [], inProgress: false };
     }
 
     componentDidMount() {
         document.addEventListener("keydown", (keyboardEvent) => {
+            if (!this.state.inProgress) {
+                return;
+            }
+
             this.nextDirection = Direction.fromKey(keyboardEvent.key);
         });
     }
@@ -53,6 +58,7 @@ export class App extends Component<Props, State> {
     }
 
     async startGame() {
+        this.setState({ inProgress: true });
         this.spawnSnakeAndPellet();
 
         do {
@@ -64,6 +70,7 @@ export class App extends Component<Props, State> {
 
         alert("Game over");
         this.resetBoard();
+        this.setState({ inProgress: false });
     }
 
     private async spawnSnakeAndPellet() {
@@ -86,9 +93,9 @@ export class App extends Component<Props, State> {
 
     get nextDirection() {
         // console.log(this.#inputDirections.map(d => d.name));
-        const nextDirections = [...this.state.nextDirections];
+        const nextDirections = [...this.state.inputQueue];
         const nextDirection = nextDirections.shift() || Direction.None;
-        this.setState({ nextDirections });
+        this.setState({ inputQueue: nextDirections });
         return nextDirection;
     }
 
@@ -98,7 +105,7 @@ export class App extends Component<Props, State> {
             return;
         }
 
-        const nextDirections = [...this.state.nextDirections];
+        const nextDirections = [...this.state.inputQueue];
 
         // If there is no next direction...
         if (nextDirections.length === 0) {
@@ -123,7 +130,7 @@ export class App extends Component<Props, State> {
 
         nextDirections.push(direction);
 
-        this.setState({ nextDirections });
+        this.setState({ inputQueue: nextDirections });
     }
 }
 
