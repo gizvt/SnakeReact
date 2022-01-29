@@ -7,10 +7,7 @@ export class Pellet {
         this._point = point;
     }
 
-    /**
-     * Returns a deep copy of the Pellet's Point.
-     */
     public get points() {
-        return JSON.parse(JSON.stringify(this._point));
+        return this._point;
     }
 }

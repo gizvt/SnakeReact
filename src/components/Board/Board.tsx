@@ -19,6 +19,7 @@ interface State {
     cells: Cells;
     pellet?: Pellet;
     snake?: Snake;
+    isInIllegalState: boolean;
 }
 
 export class Board extends Component<Props, State> {
@@ -32,7 +33,7 @@ export class Board extends Component<Props, State> {
             cells[new Point(x, y).toString()] = "Empty";
         }
 
-        this.state = { cells };
+        this.state = { cells, isInIllegalState: false };
     }
 
     render() {
@@ -52,7 +53,7 @@ export class Board extends Component<Props, State> {
                 <Button
                     className="mt-4"
                     variant="primary"
-                    onClick={() => this.spawnSnakeAndPellet()}
+                    onClick={async () => await this.startGameLoop()}
                 >
                     Start Game
                 </Button>
@@ -66,6 +67,17 @@ export class Board extends Component<Props, State> {
 
     private isPelletSpawned() {
         return !!this.state.pellet;
+    }
+
+    private async startGameLoop() {
+        this.spawnSnakeAndPellet();
+
+        do {
+            await sleep(90);
+            this.moveSnake(Direction.Left);
+        } while (!this.state.isInIllegalState);
+
+        alert("Game over");
     }
 
     private spawnSnakeAndPellet() {
@@ -90,6 +102,15 @@ export class Board extends Component<Props, State> {
 
         const head = snake.peekHead();
         const newHead = head.move(direction);
+
+        if (
+            newHead.isOutOfBounds(this.props.size) ||
+            snake.containsPoint(newHead)
+        ) {
+            this.setState({ isInIllegalState: true });
+            return;
+        }
+
         snake.spawnNewHead(newHead);
         snake.points.forEach((point) => (cells[point.toString()] = "Snake"));
         this.setState({ cells, snake });
@@ -134,3 +155,6 @@ export class Board extends Component<Props, State> {
         return Math.pow(this.props.size, 2);
     }
 }
+
+const sleep = (delay: number) =>
+    new Promise((resolve) => setTimeout(resolve, delay));

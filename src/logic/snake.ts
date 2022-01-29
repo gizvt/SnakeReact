@@ -22,14 +22,8 @@ export class Snake {
         }
     }
 
-    /**
-     * Returns a deep copy of the Snake's Points.
-     */
     public get points() {
-        return this._points.map((point) => {
-            const deepCopy = JSON.stringify(point);
-            return JSON.parse(deepCopy) as Point;
-        });
+        return this._points;
     }
 
     public popTail() {
@@ -42,6 +36,10 @@ export class Snake {
 
     public spawnNewHead(newHead: Point) {
         this._points.unshift(newHead);
+    }
+
+    public containsPoint(other: Point) {
+        return this._points.find((point) => point.equals(other));
     }
 
     public get length(): number {
