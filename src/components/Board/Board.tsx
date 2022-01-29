@@ -2,7 +2,6 @@ import { Component } from "react";
 import { Cell, CellType } from "./Cell";
 import { Point } from "../../logic/point";
 import "./Board.css";
-import { Direction } from "readline";
 
 interface Props {
     size: number;
@@ -11,6 +10,10 @@ interface Props {
 }
 
 export class BoardComponent extends Component<Props> {
+    private readonly style = {
+        gridTemplateColumns: `repeat(${this.props.size}, auto)`,
+    };
+
     render() {
         const cells: JSX.Element[] = [];
 
@@ -24,7 +27,11 @@ export class BoardComponent extends Component<Props> {
             );
         }
 
-        return <div className="board">{cells}</div>;
+        return (
+            <div className="board" style={this.style}>
+                {cells}
+            </div>
+        );
     }
     private get area() {
         return Math.pow(this.props.size, 2);
