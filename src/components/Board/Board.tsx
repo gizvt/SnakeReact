@@ -4,6 +4,8 @@ import "./Board.css";
 import Button from "react-bootstrap/Button";
 import { Direction } from "../../logic/direction";
 import { Point } from "../../logic/point";
+import { Snake } from "../../logic/snake";
+import { Pellet } from "../../logic/pellet";
 
 interface Cells {
     [key: string]: CellType;
@@ -15,9 +17,8 @@ interface Props {
 
 interface State {
     cells: Cells;
-    pelletPoint: Point | null;
-    snakePoints: Point[];
-    snakeDirection: Direction;
+    pellet?: Pellet;
+    snake?: Snake;
 }
 
 export class Board extends Component<Props, State> {
@@ -31,12 +32,7 @@ export class Board extends Component<Props, State> {
             cells[new Point(x, y).toString()] = "Empty";
         }
 
-        this.state = {
-            cells,
-            pelletPoint: null,
-            snakePoints: [],
-            snakeDirection: Direction.Left,
-        };
+        this.state = { cells };
     }
 
     render() {
@@ -65,11 +61,11 @@ export class Board extends Component<Props, State> {
     }
 
     private isSnakeSpawned() {
-        return !!this.state.snakePoints.length;
+        return !!this.state.snake;
     }
 
     private isPelletSpawned() {
-        return !!this.state.pelletPoint;
+        return !!this.state.pellet;
     }
 
     private spawnSnakeAndPellet() {
@@ -80,19 +76,23 @@ export class Board extends Component<Props, State> {
     }
 
     private moveSnake(direction: Direction) {
+        if (!this.state.snake) {
+            return;
+        }
+
         const cells: Cells = { ...this.state.cells };
-        const snakePoints = [...this.state.snakePoints];
-        const tail = snakePoints.pop();
+        const snake = new Snake(this.state.snake.points);
+        const tail = snake.popTail();
 
         if (tail) {
             cells[tail.toString()] = "Empty";
         }
 
-        const head = snakePoints[0];
+        const head = snake.peekHead();
         const newHead = head.move(direction);
-        snakePoints.unshift(newHead);
-        snakePoints.forEach((point) => (cells[point.toString()] = "Snake"));
-        this.setState({ cells, snakePoints });
+        snake.spawnNewHead(newHead);
+        snake.points.forEach((point) => (cells[point.toString()] = "Snake"));
+        this.setState({ cells, snake });
     }
 
     private spawnSnake(cells: Cells) {
@@ -102,14 +102,14 @@ export class Board extends Component<Props, State> {
 
         let centrePoint = Point.inCentreOf(this.props.size);
 
-        const snakePoints = [
+        const points = [
             centrePoint.move(Direction.Left),
             centrePoint,
             centrePoint.move(Direction.Right),
         ];
 
-        snakePoints.forEach((point) => (cells[point.toString()] = "Snake"));
-        this.setState({ snakePoints });
+        points.forEach((point) => (cells[point.toString()] = "Snake"));
+        this.setState({ snake: new Snake(points) });
     }
 
     private spawnPellet(cells: Cells) {
@@ -117,13 +117,13 @@ export class Board extends Component<Props, State> {
             return;
         }
 
-        let pelletPoint: Point;
+        let point: Point;
         do {
-            pelletPoint = Point.random(this.props.size);
-        } while (cells[pelletPoint.toString()] !== "Empty");
+            point = Point.random(this.props.size);
+        } while (cells[point.toString()] !== "Empty");
 
-        cells[pelletPoint.toString()] = "Pellet";
-        this.setState({ pelletPoint });
+        cells[point.toString()] = "Pellet";
+        this.setState({ pellet: new Pellet(point) });
     }
 
     private renderCell(coords: string, type: CellType) {
