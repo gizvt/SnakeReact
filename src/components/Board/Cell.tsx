@@ -3,11 +3,11 @@ import "./Cell.css";
 export type CellType = "Snake" | "Pellet" | "Empty";
 
 interface Props {
-    unit: CellType;
+    type: CellType;
 }
 
 export function Cell(props: Props) {
-    switch (props.unit) {
+    switch (props.type) {
         case "Empty":
             return <div className="cell"></div>;
         case "Pellet":
