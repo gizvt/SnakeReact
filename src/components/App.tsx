@@ -1,10 +1,10 @@
 import { Component } from "react";
 import { BoardComponent } from "./Board/Board";
-import Image from "react-bootstrap/Image";
 import { Board } from "../logic/board";
 import { Point } from "../logic/point";
 import { Direction } from "../logic/direction";
 import { Button } from "react-bootstrap";
+import { Title } from "./Title";
 
 interface Props {}
 
@@ -124,15 +124,6 @@ export class App extends Component<Props, State> {
 
         this.inputQueue.push(direction);
     }
-}
-
-function Title() {
-    return (
-        <h1 className="text-center">
-            <Image src="logo192.png" alt="" height={75} />
-            SnakeReact
-        </h1>
-    );
 }
 
 const sleep = (delay: number) =>
