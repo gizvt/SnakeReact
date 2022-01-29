@@ -7,7 +7,7 @@ export class Pellet {
         this._point = point;
     }
 
-    public get points() {
+    public get point() {
         return this._point;
     }
 }
