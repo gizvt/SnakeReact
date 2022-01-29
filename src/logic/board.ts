@@ -6,19 +6,19 @@ import { Snake } from "./snake";
 export class Board {
     constructor(
         public readonly size: number,
-        public readonly snake?: Snake,
-        public readonly pellet?: Pellet
+        public snake: Snake | null = null,
+        public pellet: Pellet | null = null
     ) {}
 
     get isInIllegalState() {
         return (
             this.snake &&
-            (this.containsPoint(this.snake?.peekHead()) ||
+            (this.containsPoint(this.snake.peekHead()) ||
                 this.snake.hasCollidedWithSelf())
         );
     }
 
-    getSnakeSpawnPoints() {
+    private getSnakeSpawnPoints() {
         let centrePoint = Point.inCentreOf(this.size);
 
         const points = [
@@ -32,6 +32,31 @@ export class Board {
 
     getRandomPoint() {
         return Point.random(this.size);
+    }
+
+    spawnSnake() {
+        const snakePoints = this.getSnakeSpawnPoints();
+        this.snake = new Snake(snakePoints);
+    }
+
+    spawnPellet() {
+        if (!this.snake) {
+            throw new Error(
+                "Cannot spawn a Pellet without first spawning a Snake."
+            );
+        }
+
+        let pelletPoint: Point;
+        do {
+            pelletPoint = this.getRandomPoint();
+        } while (this.snake.containsPoint(pelletPoint));
+
+        this.pellet = new Pellet(pelletPoint);
+    }
+
+    reset() {
+        this.pellet = null;
+        this.snake = null;
     }
 
     private containsPoint(point: Point) {

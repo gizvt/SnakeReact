@@ -5,8 +5,8 @@ import "./Board.css";
 
 interface Props {
     size: number;
-    snakePoints?: Point[];
-    pelletPoint?: Point;
+    snakePoints: Point[] | null;
+    pelletPoint: Point | null;
 }
 
 export class BoardComponent extends Component<Props> {

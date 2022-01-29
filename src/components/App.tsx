@@ -1,26 +1,30 @@
 import { Component } from "react";
 import { BoardComponent } from "./Board/Board";
 import Image from "react-bootstrap/Image";
-import { Snake } from "../logic/snake";
 import { Board } from "../logic/board";
 import { Point } from "../logic/point";
 import { Direction } from "../logic/direction";
-import { Pellet } from "../logic/pellet";
 import { Button } from "react-bootstrap";
 
 interface Props {}
 
 interface State {
-    board: Board;
-    inputQueue: Direction[];
     inProgress: boolean;
+    snakePoints: Point[] | null;
+    pelletPoint: Point | null;
 }
 
 export class App extends Component<Props, State> {
+    private board: Board = new Board(15);
+    private readonly inputQueue: Direction[] = [];
+
     constructor(props: Props) {
         super(props);
-        const board = new Board(15);
-        this.state = { board, inputQueue: [], inProgress: false };
+        this.state = {
+            snakePoints: null,
+            pelletPoint: null,
+            inProgress: false,
+        };
     }
 
     componentDidMount() {
@@ -41,8 +45,8 @@ export class App extends Component<Props, State> {
                     <div className="col">
                         <BoardComponent
                             size={15}
-                            snakePoints={this.state.board.snake?.points}
-                            pelletPoint={this.state.board.pellet?.point}
+                            snakePoints={this.state.snakePoints}
+                            pelletPoint={this.state.pelletPoint}
                         />
                     </div>
                 </div>
@@ -63,39 +67,33 @@ export class App extends Component<Props, State> {
 
         do {
             await sleep(90);
-            const board = this.state.board;
-            board.snake?.move(this.nextDirection);
-            this.setState({ board });
-        } while (!this.state.board.isInIllegalState);
+            this.board.snake!.move(this.nextDirection);
+            this.setState({ snakePoints: [...this.board.snake!.points] });
+        } while (!this.board.isInIllegalState);
 
         alert("Game over");
-        this.resetBoard();
-        this.setState({ inProgress: false });
+        this.board.reset();
+
+        this.setState({
+            snakePoints: this.board.snake && this.board.snake.points,
+            pelletPoint: this.board.pellet && this.board.pellet.point,
+            inProgress: false,
+        });
     }
 
-    private async spawnSnakeAndPellet() {
-        const snakePoints = this.state.board.getSnakeSpawnPoints();
-        const snake = new Snake(snakePoints);
+    private spawnSnakeAndPellet() {
+        this.board.spawnSnake();
+        this.board.spawnPellet();
 
-        let pelletPoint: Point;
-        do {
-            pelletPoint = this.state.board.getRandomPoint();
-        } while (snake.containsPoint(pelletPoint));
-
-        const pellet = new Pellet(pelletPoint);
-        const board = new Board(this.state.board.size, snake, pellet);
-        this.setState({ board });
-    }
-
-    private resetBoard() {
-        this.setState({ board: new Board(this.state.board.size) });
+        this.setState({
+            snakePoints: this.board.snake && this.board.snake.points,
+            pelletPoint: this.board.pellet && this.board.pellet.point,
+        });
     }
 
     get nextDirection() {
         // console.log(this.#inputDirections.map(d => d.name));
-        const nextDirections = [...this.state.inputQueue];
-        const nextDirection = nextDirections.shift() || Direction.None;
-        this.setState({ inputQueue: nextDirections });
+        const nextDirection = this.inputQueue.shift() || Direction.None;
         return nextDirection;
     }
 
@@ -105,32 +103,26 @@ export class App extends Component<Props, State> {
             return;
         }
 
-        const nextDirections = [...this.state.inputQueue];
-
         // If there is no next direction...
-        if (nextDirections.length === 0) {
+        if (this.inputQueue.length === 0) {
             // ...don't record the input direction if it is opposite or equal to the snake's current direction.
-            if (
-                this.state.board.snake?.direction.isOppositeOrEqualTo(direction)
-            ) {
+            if (this.board.snake?.direction.isOppositeOrEqualTo(direction)) {
                 return;
             }
             // Else if there IS a next direction...
-        } else if (nextDirections.length > 0) {
+        } else if (this.inputQueue.length > 0) {
             // ...don't record the input direction it if it is opposite or equal to the next direction.
-            if (nextDirections[0].isOppositeOrEqualTo(direction)) {
+            if (this.inputQueue[0].isOppositeOrEqualTo(direction)) {
                 return;
             }
         }
 
         // Only maintain a buffer of two input directions at once.
-        if (nextDirections.length === 2) {
-            nextDirections.shift();
+        if (this.inputQueue.length === 2) {
+            this.inputQueue.shift();
         }
 
-        nextDirections.push(direction);
-
-        this.setState({ inputQueue: nextDirections });
+        this.inputQueue.push(direction);
     }
 }
 
