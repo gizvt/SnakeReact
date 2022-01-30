@@ -7,6 +7,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { Title } from "./Title";
 import { GameOverModal } from "./GameOverModal";
 import { Score } from "./Score";
+import { Settings } from "./Board/Settings";
 
 interface Props {}
 
@@ -15,6 +16,8 @@ interface State {
     snakePoints: Point[] | null;
     pelletPoint: Point | null;
     showGameOverModal: boolean;
+    showSettings: boolean;
+    wrap: boolean;
 }
 
 export class App extends Component<Props, State> {
@@ -29,6 +32,8 @@ export class App extends Component<Props, State> {
             pelletPoint: null,
             inProgress: false,
             showGameOverModal: false,
+            showSettings: false,
+            wrap: false,
         };
     }
 
@@ -50,6 +55,14 @@ export class App extends Component<Props, State> {
                     score={this.board.snake?.pelletsEaten || 0}
                     handleClose={() => this.handleGameOver()}
                 />
+                <Settings
+                    show={this.state.showSettings}
+                    wrap={this.state.wrap}
+                    handleClose={() => this.setState({ showSettings: false })}
+                    handleWrapChange={(wrap: boolean) =>
+                        this.setState({ wrap: wrap })
+                    }
+                />
                 <Title />
                 <Row className="text-center">
                     <Col>
@@ -67,6 +80,15 @@ export class App extends Component<Props, State> {
                 </Row>
                 <Row className="mt-4 text-center">
                     <Col>
+                        <Button
+                            className="me-3"
+                            variant="outline-primary"
+                            onClick={() =>
+                                this.setState({ showSettings: true })
+                            }
+                        >
+                            Settings
+                        </Button>
                         <Button onClick={async () => await this.startGame()}>
                             Start Game
                         </Button>
@@ -78,7 +100,7 @@ export class App extends Component<Props, State> {
 
     async startGame() {
         this.setState({ inProgress: true });
-        this.board.spawnSnake();
+        this.board.spawnSnake(this.state.wrap);
         this.board.spawnPellet();
 
         do {

@@ -8,7 +8,7 @@ interface Props {
 
 export function GameOverModal(props: Props) {
     return (
-        <Modal show={props.show} onHide={props.handleClose}>
+        <Modal show={props.show} onHide={props.handleClose} centered>
             <Modal.Header closeButton>
                 <Modal.Title>Game over!</Modal.Title>
             </Modal.Header>

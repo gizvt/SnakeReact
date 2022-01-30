@@ -8,7 +8,7 @@ export class Snake {
     private _pelletsEaten = 0;
     private _pelletEaten = false;
 
-    constructor(points: Point[]) {
+    constructor(points: Point[], private readonly wrap: boolean) {
         this._points = points;
     }
 
@@ -49,9 +49,13 @@ export class Snake {
         return this._points.filter((p) => p.equals(this.peekHead())).length > 1;
     }
 
-    public move(direction: Direction, pelletPoint: Point) {
+    public move(direction: Direction, pelletPoint: Point, boardSize: number) {
         this.changeDirection(direction);
         let newHeadPoint = this.peekHead().move(this.direction);
+
+        if (this.wrap && newHeadPoint.isOutOfBounds(boardSize)) {
+            newHeadPoint = newHeadPoint.wrap(this._direction, boardSize);
+        }
 
         if (newHeadPoint.equals(pelletPoint)) {
             this.pelletEatenAudio.play();

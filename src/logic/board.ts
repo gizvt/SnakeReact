@@ -19,14 +19,14 @@ export class Board {
     }
 
     public moveSnake(direction: Direction) {
-        this.snake?.move(direction, this.pellet!.point);
+        this.snake?.move(direction, this.pellet!.point, this.size);
 
         if (this.snake?.pelletEaten) {
             this.spawnPellet();
         }
     }
 
-    spawnSnake() {
+    spawnSnake(wrap: boolean) {
         let centrePoint = Point.inCentreOf(this.size);
 
         const points = [
@@ -35,7 +35,7 @@ export class Board {
             centrePoint.move(Direction.Right),
         ];
 
-        this.snake = new Snake(points);
+        this.snake = new Snake(points, wrap);
     }
 
     spawnPellet() {
