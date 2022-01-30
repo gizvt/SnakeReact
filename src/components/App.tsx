@@ -3,7 +3,7 @@ import { BoardComponent } from "./Board/Board";
 import { Board } from "../logic/board";
 import { Point } from "../logic/point";
 import { Direction } from "../logic/direction";
-import { Button } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { Title } from "./Title";
 import { GameOverModal } from "./GameOverModal";
 import { Score } from "./Score";
@@ -50,27 +50,27 @@ export class App extends Component<Props, State> {
                     handleClose={() => this.handleGameOver()}
                 />
                 <Title />
-                <div className="row text-center">
-                    <div className="col">
+                <Row className="text-center">
+                    <Col>
                         <Score score={this.board.snake?.pelletsEaten || 0} />
-                    </div>
-                </div>
-                <div className="row text-center">
-                    <div className="col">
+                    </Col>
+                </Row>
+                <Row className="text-center">
+                    <Col>
                         <BoardComponent
                             size={15}
                             snakePoints={this.state.snakePoints}
                             pelletPoint={this.state.pelletPoint}
                         />
-                    </div>
-                </div>
-                <div className="row mt-4 text-center">
-                    <div className="col">
+                    </Col>
+                </Row>
+                <Row className="mt-4 text-center">
+                    <Col>
                         <Button onClick={async () => await this.startGame()}>
                             Start Game
                         </Button>
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             </>
         );
     }
