@@ -18,22 +18,6 @@ export class Board {
         );
     }
 
-    private getSnakeSpawnPoints() {
-        let centrePoint = Point.inCentreOf(this.size);
-
-        const points = [
-            centrePoint.move(Direction.Left),
-            centrePoint,
-            centrePoint.move(Direction.Right),
-        ];
-
-        return points;
-    }
-
-    getRandomPoint() {
-        return Point.random(this.size);
-    }
-
     public moveSnake(direction: Direction) {
         this.snake?.move(direction, this.pellet!.point);
 
@@ -43,8 +27,15 @@ export class Board {
     }
 
     spawnSnake() {
-        const snakePoints = this.getSnakeSpawnPoints();
-        this.snake = new Snake(snakePoints);
+        let centrePoint = Point.inCentreOf(this.size);
+
+        const points = [
+            centrePoint.move(Direction.Left),
+            centrePoint,
+            centrePoint.move(Direction.Right),
+        ];
+
+        this.snake = new Snake(points);
     }
 
     spawnPellet() {
@@ -54,12 +45,12 @@ export class Board {
             );
         }
 
-        let pelletPoint: Point;
+        let point: Point;
         do {
-            pelletPoint = this.getRandomPoint();
-        } while (this.snake.containsPoint(pelletPoint));
+            point = Point.random(this.size);
+        } while (this.snake.containsPoint(point));
 
-        this.pellet = new Pellet(pelletPoint);
+        this.pellet = new Pellet(point);
     }
 
     reset() {
