@@ -6,7 +6,10 @@ export class Direction {
     static Down = new Direction(40, ["ArrowDown", "s"]);
     static AllDirections = [this.Left, this.Up, this.Right, this.Down];
 
-    constructor(private readonly id: number, private readonly keys: string[]) {}
+    private constructor(
+        private readonly id: number,
+        private readonly keys: string[]
+    ) {}
 
     isOppositeTo(other: Direction) {
         return this.id + other.id === 40 || this.id + other.id === 60;
