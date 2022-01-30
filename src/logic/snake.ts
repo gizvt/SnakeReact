@@ -2,6 +2,7 @@ import { Direction } from "./direction";
 import { Point } from "./point";
 
 export class Snake {
+    private pelletEatenAudio = new Audio("/PelletEaten.ogg");
     private _direction: Direction = Direction.Left;
     private readonly _points: Point[];
     private _pelletsEaten = 0;
@@ -53,6 +54,7 @@ export class Snake {
         let newHeadPoint = this.peekHead().move(this.direction);
 
         if (newHeadPoint.equals(pelletPoint)) {
+            this.pelletEatenAudio.play();
             this._pelletsEaten++;
             this._pelletEaten = true;
         } else {

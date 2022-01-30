@@ -18,6 +18,7 @@ interface State {
 }
 
 export class App extends Component<Props, State> {
+    private gameOverAudio = new Audio("GameOver.ogg");
     private board: Board = new Board(15);
     private readonly inputQueue: Direction[] = [];
 
@@ -90,6 +91,7 @@ export class App extends Component<Props, State> {
             this.board.moveSnake(this.nextDirection);
         } while (!this.board.isInIllegalState);
 
+        this.gameOverAudio.play();
         this.setState({ inProgress: false, showGameOverModal: true });
     }
 
