@@ -33,6 +33,8 @@ export class App extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
+        this.handleSettingsChange = this.handleSettingsChange.bind(this);
+
         this.state = {
             snakePoints: null,
             pelletPoint: null,
@@ -70,23 +72,7 @@ export class App extends Component<Props, State> {
                     show={this.state.showSettings}
                     settings={this.state.settings}
                     handleClose={() => this.setState({ showSettings: false })}
-                    handleWrapChange={(wrap: boolean) => {
-                        const settings: Settings = {
-                            ...this.state.settings,
-                            wrapEnabled: wrap,
-                        };
-
-                        this.setState({ settings });
-                    }}
-                    handleAudioChange={(audio: boolean) => {
-                        const settings: Settings = {
-                            ...this.state.settings,
-                            audioEnabled: audio,
-                        };
-
-                        this.audioPlayer.isEnabled = audio;
-                        this.setState({ settings });
-                    }}
+                    handleSettingsChange={this.handleSettingsChange}
                 />
                 <Title />
                 <Row className="text-center">
@@ -155,8 +141,18 @@ export class App extends Component<Props, State> {
         });
     }
 
+    private handleSettingsChange(newSettings: Settings) {
+        this.audioPlayer.isEnabled = newSettings.audioEnabled;
+
+        this.setState({
+            settings: {
+                ...this.state.settings,
+                ...newSettings,
+            },
+        });
+    }
+
     get nextDirection() {
-        // console.log(this.#inputDirections.map(d => d.name));
         const nextDirection = this.inputQueue.shift() || Direction.None;
         return nextDirection;
     }

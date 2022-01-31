@@ -4,8 +4,7 @@ import { Settings } from "./App";
 interface Props {
     show: boolean;
     handleClose(): void;
-    handleWrapChange(wrap: boolean): void;
-    handleAudioChange(audio: boolean): void;
+    handleSettingsChange(newSettings: Settings): void;
     settings: Settings;
 }
 
@@ -24,7 +23,10 @@ export function SettingsComponent(props: Props) {
                 <Form>
                     <Form.Check
                         onChange={(e) =>
-                            props.handleWrapChange(e.target.checked)
+                            props.handleSettingsChange({
+                                ...props.settings,
+                                wrapEnabled: e.target.checked,
+                            })
                         }
                         type="switch"
                         label="Wrap"
@@ -32,7 +34,10 @@ export function SettingsComponent(props: Props) {
                     />
                     <Form.Check
                         onChange={(e) =>
-                            props.handleAudioChange(e.target.checked)
+                            props.handleSettingsChange({
+                                ...props.settings,
+                                audioEnabled: e.target.checked,
+                            })
                         }
                         type="switch"
                         label="Audio"
