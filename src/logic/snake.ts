@@ -1,14 +1,14 @@
+import { Sound } from "./audio-player";
 import { Direction } from "./direction";
 import { Point } from "./point";
 
 export class Snake {
-    private pelletEatenAudio = new Audio("/PelletEaten.ogg");
     private _direction: Direction = Direction.Left;
     private readonly _points: Point[];
     private _pelletsEaten = 0;
     private _pelletEaten = false;
 
-    constructor(points: Point[], private readonly wrap: boolean) {
+    constructor(points: Point[], private readonly wrapEnabled: boolean) {
         this._points = points;
     }
 
@@ -53,12 +53,15 @@ export class Snake {
         this.changeDirection(direction);
         let newHeadPoint = this.peekHead().move(this.direction);
 
-        if (this.wrap && newHeadPoint.isOutOfBounds(boardSize)) {
+        if (this.wrapEnabled && newHeadPoint.isOutOfBounds(boardSize)) {
             newHeadPoint = newHeadPoint.wrap(this._direction, boardSize);
         }
 
         if (newHeadPoint.equals(pelletPoint)) {
-            this.pelletEatenAudio.play();
+            document.dispatchEvent(
+                new CustomEvent("PlayAudio", { detail: Sound.PelletEaten })
+            );
+
             this._pelletsEaten++;
             this._pelletEaten = true;
         } else {

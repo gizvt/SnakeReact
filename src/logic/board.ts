@@ -26,7 +26,7 @@ export class Board {
         }
     }
 
-    spawnSnake(wrap: boolean) {
+    spawnSnake(wrapEnabled: boolean) {
         let centrePoint = Point.inCentreOf(this.size);
 
         const points = [
@@ -35,7 +35,7 @@ export class Board {
             centrePoint.move(Direction.Right),
         ];
 
-        this.snake = new Snake(points, wrap);
+        this.snake = new Snake(points, wrapEnabled);
     }
 
     spawnPellet() {

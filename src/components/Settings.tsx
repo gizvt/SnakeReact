@@ -1,13 +1,15 @@
 import { Button, Form, Modal } from "react-bootstrap";
+import { Settings } from "./App";
 
 interface Props {
     show: boolean;
     handleClose(): void;
     handleWrapChange(wrap: boolean): void;
-    wrap: boolean;
+    handleAudioChange(audio: boolean): void;
+    settings: Settings;
 }
 
-export function Settings(props: Props) {
+export function SettingsComponent(props: Props) {
     return (
         <Modal
             show={props.show}
@@ -25,9 +27,16 @@ export function Settings(props: Props) {
                             props.handleWrapChange(e.target.checked)
                         }
                         type="switch"
-                        id="custom-switch"
                         label="Wrap"
-                        checked={props.wrap}
+                        checked={props.settings.wrapEnabled}
+                    />
+                    <Form.Check
+                        onChange={(e) =>
+                            props.handleAudioChange(e.target.checked)
+                        }
+                        type="switch"
+                        label="Audio"
+                        checked={props.settings.audioEnabled}
                     />
                 </Form>
             </Modal.Body>

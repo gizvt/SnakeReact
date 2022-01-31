@@ -7,7 +7,13 @@ import { Button, Col, Row } from "react-bootstrap";
 import { Title } from "./Title";
 import { GameOverModal } from "./GameOverModal";
 import { Score } from "./Score";
-import { Settings } from "./Board/Settings";
+import { SettingsComponent } from "./Settings";
+import { AudioPlayer, Sound } from "../logic/audio-player";
+
+export interface Settings {
+    wrapEnabled: boolean;
+    audioEnabled: boolean;
+}
 
 interface Props {}
 
@@ -17,13 +23,13 @@ interface State {
     pelletPoint: Point | null;
     showGameOverModal: boolean;
     showSettings: boolean;
-    wrap: boolean;
+    settings: Settings;
 }
 
 export class App extends Component<Props, State> {
-    private gameOverAudio = new Audio("GameOver.ogg");
     private board: Board = new Board(15);
     private readonly inputQueue: Direction[] = [];
+    private readonly audioPlayer: AudioPlayer = new AudioPlayer();
 
     constructor(props: Props) {
         super(props);
@@ -33,7 +39,10 @@ export class App extends Component<Props, State> {
             inProgress: false,
             showGameOverModal: false,
             showSettings: false,
-            wrap: false,
+            settings: {
+                wrapEnabled: false,
+                audioEnabled: true,
+            },
         };
     }
 
@@ -45,6 +54,8 @@ export class App extends Component<Props, State> {
 
             this.nextDirection = Direction.fromKey(keyboardEvent.key);
         });
+
+        this.audioPlayer.init();
     }
 
     render() {
@@ -55,13 +66,27 @@ export class App extends Component<Props, State> {
                     score={this.board.snake?.pelletsEaten || 0}
                     handleClose={() => this.handleGameOver()}
                 />
-                <Settings
+                <SettingsComponent
                     show={this.state.showSettings}
-                    wrap={this.state.wrap}
+                    settings={this.state.settings}
                     handleClose={() => this.setState({ showSettings: false })}
-                    handleWrapChange={(wrap: boolean) =>
-                        this.setState({ wrap: wrap })
-                    }
+                    handleWrapChange={(wrap: boolean) => {
+                        const settings: Settings = {
+                            ...this.state.settings,
+                            wrapEnabled: wrap,
+                        };
+
+                        this.setState({ settings });
+                    }}
+                    handleAudioChange={(audio: boolean) => {
+                        const settings: Settings = {
+                            ...this.state.settings,
+                            audioEnabled: audio,
+                        };
+
+                        this.audioPlayer.isEnabled = audio;
+                        this.setState({ settings });
+                    }}
                 />
                 <Title />
                 <Row className="text-center">
@@ -100,7 +125,7 @@ export class App extends Component<Props, State> {
 
     async startGame() {
         this.setState({ inProgress: true });
-        this.board.spawnSnake(this.state.wrap);
+        this.board.spawnSnake(this.state.settings.wrapEnabled);
         this.board.spawnPellet();
 
         do {
@@ -113,7 +138,10 @@ export class App extends Component<Props, State> {
             this.board.moveSnake(this.nextDirection);
         } while (!this.board.isInIllegalState);
 
-        this.gameOverAudio.play();
+        document.dispatchEvent(
+            new CustomEvent("PlayAudio", { detail: Sound.GameOver })
+        );
+
         this.setState({ inProgress: false, showGameOverModal: true });
     }
 
