@@ -9,6 +9,7 @@ import { GameOverModal } from "./GameOverModal";
 import { Score } from "./Score";
 import { SettingsComponent } from "./Settings";
 import { AudioPlayer, Sound } from "../logic/audio-player";
+import { Timer } from "./Timer";
 
 export interface Settings {
     wrapEnabled: boolean;
@@ -76,6 +77,7 @@ export class App extends Component<Props, State> {
                 />
                 <Title />
                 <Row className="text-center">
+                    <Col>{this.state.inProgress && <Timer />}</Col>
                     <Col>
                         <Score score={this.board.snake?.pelletsEaten || 0} />
                     </Col>
