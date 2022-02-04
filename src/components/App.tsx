@@ -41,14 +41,7 @@ export class App extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.board = new Board(this.boardSize);
-        const cells: Cells = {};
-
-        for (let i = 0; i < this.board.area; i++) {
-            const y = Math.floor(i / this.board.size);
-            const x = i - y * this.board.size;
-            const point = new Point(x, y).toString();
-            cells[point] = this.createCell(point, "Empty");
-        }
+        const cells = this.createCells();
 
         this.emptyCells = cells;
 
@@ -214,6 +207,19 @@ export class App extends Component<Props, State> {
         }
 
         this.inputQueue.push(direction);
+    }
+
+    private createCells() {
+        const cells: Cells = {};
+
+        for (let i = 0; i < this.board.area; i++) {
+            const y = Math.floor(i / this.board.size);
+            const x = i - y * this.board.size;
+            const point = new Point(x, y).toString();
+            cells[point] = this.createCell(point, "Empty");
+        }
+
+        return cells;
     }
 
     private createCell(coords: string, type: CellType) {
