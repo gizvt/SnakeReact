@@ -1,11 +1,11 @@
-import { Component, PureComponent } from "react";
+import { PureComponent } from "react";
 import "./Board.css";
 
 interface Props {
     size: number;
 }
 
-export class BoardComponent extends PureComponent<Props> {
+export class Board extends PureComponent<Props> {
     private readonly style = {
         gridTemplateColumns: `repeat(${this.props.size}, auto)`,
     };

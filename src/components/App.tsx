@@ -3,7 +3,7 @@ import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
 import { Component, Profiler, ReactElement } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import {
-    BoardComponent,
+    Board as BoardComponent,
     Cell,
     CellType,
     GameOverModal,
@@ -18,8 +18,6 @@ interface Cells {
     [key: string]: ReactElement;
 }
 
-interface Props {}
-
 interface State {
     inProgress: boolean;
     showGameOverModal: boolean;
@@ -28,13 +26,13 @@ interface State {
     cells: Cells;
 }
 
-export class App extends Component<Props, State> {
+export class App extends Component<{}, State> {
     private board: Board;
     private readonly audioPlayer: AudioPlayer = new AudioPlayer();
     private readonly emptyCells: Cells;
     private boardSize = 15;
 
-    constructor(props: Props) {
+    constructor(props: {}) {
         super(props);
         this.board = new Board(this.boardSize);
         const cells = this.createCells();
