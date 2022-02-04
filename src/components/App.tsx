@@ -11,6 +11,7 @@ import { SettingsModal } from "./Modals/SettingsModal";
 import { AudioPlayer, Sound } from "../logic/audio-player";
 import { Timer } from "./Status/Timer";
 import { Cell, CellType } from "./Board/Cell";
+import inputHandler from "../logic/intput-handler";
 
 interface Cells {
     [key: string]: ReactElement;
@@ -33,7 +34,6 @@ interface State {
 
 export class App extends Component<Props, State> {
     private board: Board;
-    private readonly inputQueue: Direction[] = [];
     private readonly audioPlayer: AudioPlayer = new AudioPlayer();
     private readonly emptyCells: Cells;
     private boardSize = 15;
@@ -65,7 +65,10 @@ export class App extends Component<Props, State> {
                 return;
             }
 
-            this.nextDirection = Direction.fromKey(keyboardEvent.key);
+            inputHandler.setNextDirection(
+                Direction.fromKey(keyboardEvent.key),
+                this.board.snake?.direction || Direction.None
+            );
         });
 
         this.audioPlayer.init();
@@ -146,7 +149,7 @@ export class App extends Component<Props, State> {
             cells[pellet] = this.createCell(pellet, "Pellet");
             this.setState({ cells });
             await sleep(90);
-            this.board.moveSnake(this.nextDirection);
+            this.board.moveSnake(inputHandler.nextDirection);
         } while (!this.board.isInIllegalState);
 
         document.dispatchEvent(
@@ -174,39 +177,6 @@ export class App extends Component<Props, State> {
                 ...newSettings,
             },
         });
-    }
-
-    get nextDirection() {
-        const nextDirection = this.inputQueue.shift() || Direction.None;
-        return nextDirection;
-    }
-
-    private set nextDirection(direction: Direction) {
-        if (!Direction.AllDirections.includes(direction)) {
-            // Don't add if the input direction doesn't exist.
-            return;
-        }
-
-        // If there is no next direction...
-        if (this.inputQueue.length === 0) {
-            // ...don't record the input direction if it is opposite or equal to the snake's current direction.
-            if (this.board.snake?.direction.isOppositeOrEqualTo(direction)) {
-                return;
-            }
-            // Else if there IS a next direction...
-        } else if (this.inputQueue.length > 0) {
-            // ...don't record the input direction it if it is opposite or equal to the next direction.
-            if (this.inputQueue[0].isOppositeOrEqualTo(direction)) {
-                return;
-            }
-        }
-
-        // Only maintain a buffer of two input directions at once.
-        if (this.inputQueue.length === 2) {
-            this.inputQueue.shift();
-        }
-
-        this.inputQueue.push(direction);
     }
 
     private createCells() {
