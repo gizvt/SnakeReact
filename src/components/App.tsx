@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, Profiler, ReactElement } from "react";
 import { BoardComponent } from "./Board/Board";
 import { Board } from "../logic/board";
 import { Point } from "../logic/point";
@@ -10,6 +10,11 @@ import { Score } from "./Score";
 import { SettingsComponent } from "./Settings";
 import { AudioPlayer, Sound } from "../logic/audio-player";
 import { Timer } from "./Timer";
+import { Cell, CellType } from "./Board/Cell";
+
+interface Cells {
+    [key: string]: ReactElement;
+}
 
 export interface Settings {
     wrapEnabled: boolean;
@@ -20,25 +25,32 @@ interface Props {}
 
 interface State {
     inProgress: boolean;
-    snakePoints: Point[] | null;
-    pelletPoint: Point | null;
     showGameOverModal: boolean;
     showSettings: boolean;
     settings: Settings;
+    cells: Cells;
 }
 
 export class App extends Component<Props, State> {
     private board: Board = new Board(15);
     private readonly inputQueue: Direction[] = [];
     private readonly audioPlayer: AudioPlayer = new AudioPlayer();
+    private readonly emptyCells: Cells;
 
     constructor(props: Props) {
         super(props);
-        this.handleSettingsChange = this.handleSettingsChange.bind(this);
+        const cells: Cells = {};
+
+        for (let i = 0; i < this.board.area; i++) {
+            const y = Math.floor(i / this.board.size);
+            const x = i - y * this.board.size;
+            const point = new Point(x, y).toString();
+            cells[point] = this.renderCell(point, "Empty");
+        }
+
+        this.emptyCells = cells;
 
         this.state = {
-            snakePoints: null,
-            pelletPoint: null,
             inProgress: false,
             showGameOverModal: false,
             showSettings: false,
@@ -46,7 +58,10 @@ export class App extends Component<Props, State> {
                 wrapEnabled: false,
                 audioEnabled: true,
             },
+            cells: cells,
         };
+
+        this.handleSettingsChange = this.handleSettingsChange.bind(this);
     }
 
     componentDidMount() {
@@ -84,11 +99,16 @@ export class App extends Component<Props, State> {
                 </Row>
                 <Row className="text-center">
                     <Col>
-                        <BoardComponent
-                            size={15}
-                            snakePoints={this.state.snakePoints}
-                            pelletPoint={this.state.pelletPoint}
-                        />
+                        <Profiler
+                            id="asd"
+                            onRender={(id, phase, actualDuration, ...rest) =>
+                                console.log(phase, actualDuration)
+                            }
+                        >
+                            <BoardComponent>
+                                {Object.values(this.state.cells)}
+                            </BoardComponent>
+                        </Profiler>
                     </Col>
                 </Row>
                 <Row className="mt-4 text-center">
@@ -117,13 +137,25 @@ export class App extends Component<Props, State> {
         this.board.spawnPellet();
 
         do {
-            this.setState({
-                snakePoints: this.board.snake && [...this.board.snake.points],
-                pelletPoint: this.board.pellet && this.board.pellet.point,
-            });
+            const start = performance.now();
+            let cells = { ...this.emptyCells };
 
+            const pellet = this.board.pellet!.point.toString();
+
+            this.board.snake!.points.forEach(
+                (p) =>
+                    (cells[p.toString()] = this.renderCell(
+                        p.toString(),
+                        "Snake"
+                    ))
+            );
+
+            cells[pellet] = this.renderCell(pellet, "Pellet");
+            this.setState({ cells });
             await sleep(90);
             this.board.moveSnake(this.nextDirection);
+            const end = performance.now();
+            // console.log(end - start);
         } while (!this.board.isInIllegalState);
 
         document.dispatchEvent(
@@ -137,8 +169,7 @@ export class App extends Component<Props, State> {
         this.board.reset();
 
         this.setState({
-            snakePoints: this.board.snake && this.board.snake.points,
-            pelletPoint: this.board.pellet && this.board.pellet.point,
+            cells: { ...this.emptyCells },
             showGameOverModal: false,
         });
     }
@@ -185,6 +216,10 @@ export class App extends Component<Props, State> {
         }
 
         this.inputQueue.push(direction);
+    }
+
+    private renderCell(coords: string, type: CellType) {
+        return <Cell key={coords} type={type} />;
     }
 }
 

@@ -1,12 +1,14 @@
+import React from "react";
 import "./Cell.css";
 
 export type CellType = "Snake" | "Pellet" | "Empty";
 
-interface Props {
+export interface Props {
     type: CellType;
 }
 
-export function Cell(props: Props) {
+export const Cell = React.memo(function Cell(props: Props) {
+    console.log(`Rendering a cell of type ${props.type}`);
     switch (props.type) {
         case "Empty":
             return <div className="cell"></div>;
@@ -17,4 +19,4 @@ export function Cell(props: Props) {
         default:
             throw new Error("Unrecognised Cell Type.");
     }
-}
+});
