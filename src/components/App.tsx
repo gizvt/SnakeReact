@@ -4,12 +4,12 @@ import { Board } from "../logic/board";
 import { Point } from "../logic/point";
 import { Direction } from "../logic/direction";
 import { Button, Col, Row } from "react-bootstrap";
-import { Title } from "./Title";
-import { GameOverModal } from "./GameOverModal";
-import { Score } from "./Score";
-import { SettingsComponent } from "./Settings";
+import { Title } from "./Status/Title";
+import { GameOverModal } from "./Modals/GameOverModal";
+import { Score } from "./Status/Score";
+import { SettingsModal } from "./Modals/SettingsModal";
 import { AudioPlayer, Sound } from "../logic/audio-player";
-import { Timer } from "./Timer";
+import { Timer } from "./Status/Timer";
 import { Cell, CellType } from "./Board/Cell";
 
 interface Cells {
@@ -45,7 +45,7 @@ export class App extends Component<Props, State> {
             const y = Math.floor(i / this.board.size);
             const x = i - y * this.board.size;
             const point = new Point(x, y).toString();
-            cells[point] = this.renderCell(point, "Empty");
+            cells[point] = this.createCell(point, "Empty");
         }
 
         this.emptyCells = cells;
@@ -84,7 +84,7 @@ export class App extends Component<Props, State> {
                     score={this.board.snake?.pelletsEaten || 0}
                     handleClose={() => this.handleGameOver()}
                 />
-                <SettingsComponent
+                <SettingsModal
                     show={this.state.showSettings}
                     settings={this.state.settings}
                     handleClose={() => this.setState({ showSettings: false })}
@@ -137,25 +137,21 @@ export class App extends Component<Props, State> {
         this.board.spawnPellet();
 
         do {
-            const start = performance.now();
             let cells = { ...this.emptyCells };
-
             const pellet = this.board.pellet!.point.toString();
 
             this.board.snake!.points.forEach(
                 (p) =>
-                    (cells[p.toString()] = this.renderCell(
+                    (cells[p.toString()] = this.createCell(
                         p.toString(),
                         "Snake"
                     ))
             );
 
-            cells[pellet] = this.renderCell(pellet, "Pellet");
+            cells[pellet] = this.createCell(pellet, "Pellet");
             this.setState({ cells });
             await sleep(90);
             this.board.moveSnake(this.nextDirection);
-            const end = performance.now();
-            // console.log(end - start);
         } while (!this.board.isInIllegalState);
 
         document.dispatchEvent(
@@ -218,7 +214,7 @@ export class App extends Component<Props, State> {
         this.inputQueue.push(direction);
     }
 
-    private renderCell(coords: string, type: CellType) {
+    private createCell(coords: string, type: CellType) {
         return <Cell key={coords} type={type} />;
     }
 }

@@ -1,5 +1,5 @@
 import { Button, Form, Modal } from "react-bootstrap";
-import { Settings } from "./App";
+import { Settings } from "../App";
 
 interface Props {
     show: boolean;
@@ -8,7 +8,7 @@ interface Props {
     settings: Settings;
 }
 
-export function SettingsComponent(props: Props) {
+export function SettingsModal(props: Props) {
     return (
         <Modal
             show={props.show}

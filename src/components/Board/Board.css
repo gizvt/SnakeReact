@@ -3,19 +3,3 @@
     border-left: 1px solid #000000;
     border-top: 1px solid #000000;
 }
-
-.cell {
-    background-color: #ffffff;
-    border-right: 1px solid #000000;
-    border-bottom: 1px solid #000000;
-    height: 40px;
-    width: 40px;
-}
-
-.snake {
-    background-color: #00b400;
-}
-
-.pellet {
-    background-color: #000000;
-}
