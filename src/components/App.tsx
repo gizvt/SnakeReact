@@ -32,13 +32,15 @@ interface State {
 }
 
 export class App extends Component<Props, State> {
-    private board: Board = new Board(15);
+    private board: Board;
     private readonly inputQueue: Direction[] = [];
     private readonly audioPlayer: AudioPlayer = new AudioPlayer();
     private readonly emptyCells: Cells;
+    private boardSize = 15;
 
     constructor(props: Props) {
         super(props);
+        this.board = new Board(this.boardSize);
         const cells: Cells = {};
 
         for (let i = 0; i < this.board.area; i++) {
@@ -105,7 +107,7 @@ export class App extends Component<Props, State> {
                                 console.log(phase, actualDuration)
                             }
                         >
-                            <BoardComponent>
+                            <BoardComponent size={this.boardSize}>
                                 {Object.values(this.state.cells)}
                             </BoardComponent>
                         </Profiler>
