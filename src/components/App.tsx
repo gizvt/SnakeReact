@@ -1,17 +1,17 @@
-import { Component, Profiler, ReactElement } from "react";
-import { BoardComponent } from "./Board/Board";
-import { Board } from "../logic/board";
-import { Point } from "../logic/point";
-import { Direction } from "../logic/direction";
-import { Button, Col, Row } from "react-bootstrap";
-import { Title } from "./Status/Title";
-import { GameOverModal } from "./Modals/GameOverModal";
-import { Score } from "./Status/Score";
-import { SettingsModal } from "./Modals/SettingsModal";
-import { AudioPlayer, Sound } from "../logic/audio-player";
-import { Timer } from "./Status/Timer";
-import { Cell, CellType } from "./Board/Cell";
 import inputHandler from "../logic/intput-handler";
+import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
+import { Component, Profiler, ReactElement } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import {
+    BoardComponent,
+    Cell,
+    CellType,
+    GameOverModal,
+    Score,
+    SettingsModal,
+    Timer,
+    Title,
+} from ".";
 
 interface Cells {
     [key: string]: ReactElement;
