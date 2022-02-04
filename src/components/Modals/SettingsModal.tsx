@@ -1,5 +1,9 @@
 import { Button, Form, Modal } from "react-bootstrap";
-import { Settings } from "../App";
+
+export interface Settings {
+    wrapEnabled: boolean;
+    audioEnabled: boolean;
+}
 
 interface Props {
     show: boolean;

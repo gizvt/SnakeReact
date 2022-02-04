@@ -11,15 +11,11 @@ import {
     SettingsModal,
     Timer,
     Title,
+    Settings,
 } from ".";
 
 interface Cells {
     [key: string]: ReactElement;
-}
-
-export interface Settings {
-    wrapEnabled: boolean;
-    audioEnabled: boolean;
 }
 
 interface Props {}
@@ -98,9 +94,9 @@ export class App extends Component<Props, State> {
                 <Row className="text-center">
                     <Col>
                         <Profiler
-                            id="asd"
-                            onRender={(id, phase, actualDuration, ...rest) =>
-                                console.log(phase, actualDuration)
+                            id="boardProfiler"
+                            onRender={(...rest) =>
+                                console.log(rest[1], rest[2])
                             }
                         >
                             <BoardComponent size={this.boardSize}>
@@ -129,25 +125,13 @@ export class App extends Component<Props, State> {
         );
     }
 
-    async startGame() {
+    private async startGame() {
         this.setState({ inProgress: true });
         this.board.spawnSnake(this.state.settings.wrapEnabled);
         this.board.spawnPellet();
 
         do {
-            let cells = { ...this.emptyCells };
-            const pellet = this.board.pellet!.point.toString();
-
-            this.board.snake!.points.forEach(
-                (p) =>
-                    (cells[p.toString()] = this.createCell(
-                        p.toString(),
-                        "Snake"
-                    ))
-            );
-
-            cells[pellet] = this.createCell(pellet, "Pellet");
-            this.setState({ cells });
+            this.updateCellsInState();
             await sleep(90);
             this.board.moveSnake(inputHandler.nextDirection);
         } while (!this.board.isInIllegalState);
@@ -157,6 +141,19 @@ export class App extends Component<Props, State> {
         );
 
         this.setState({ inProgress: false, showGameOverModal: true });
+    }
+
+    private updateCellsInState() {
+        let cells = { ...this.emptyCells };
+        const pellet = this.board.pellet!.point.toString();
+
+        this.board.snake!.points.forEach(
+            (p) =>
+                (cells[p.toString()] = this.createCell(p.toString(), "Snake"))
+        );
+
+        cells[pellet] = this.createCell(pellet, "Pellet");
+        this.setState({ cells });
     }
 
     private handleGameOver() {
