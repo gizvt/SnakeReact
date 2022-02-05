@@ -11,8 +11,6 @@ import {
 } from ".";
 import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
 import inputHandler from "../logic/input-handler";
-import "./site.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 
 interface Cells {
     [key: string]: ReactElement;
