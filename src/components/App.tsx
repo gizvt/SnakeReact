@@ -7,10 +7,9 @@ import {
     Cell,
     CellType,
     GameOverModal,
-    Score,
     SettingsModal,
-    Timer,
     Title,
+    TopBar,
     Settings,
 } from ".";
 
@@ -84,9 +83,11 @@ export class App extends Component<{}, State> {
                 />
                 <Title />
                 <Row className="text-center">
-                    <Col>{this.state.inProgress && <Timer />}</Col>
                     <Col>
-                        <Score score={this.board.snake?.pelletsEaten || 0} />
+                        <TopBar
+                            showTimer={this.state.inProgress}
+                            score={this.board.snake?.pelletsEaten}
+                        />
                     </Col>
                 </Row>
                 <Row className="text-center">
