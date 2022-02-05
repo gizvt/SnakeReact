@@ -10,7 +10,7 @@ import {
     TopBar,
 } from ".";
 import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
-import inputHandler from "../logic/intput-handler";
+import inputHandler from "../logic/input-handler";
 
 interface Cells {
     [key: string]: ReactElement;
