@@ -13,10 +13,10 @@ export function TopBar(props: Props) {
                 <Stack direction="horizontal" gap={3} className="mt-3 mb-3">
                     <Title />
                     <div className="vr"></div>
-                    <Stack direction="vertical" gap={2} className="">
+                    <Stack direction="vertical" className="">
                         <PlayerName />
-                        {/* {props.showTimer && <Timer />} */}
                         <Score score={props.score || 0} />
+                        <Timer shouldRun={props.showTimer} />
                     </Stack>
                 </Stack>
             </Col>
