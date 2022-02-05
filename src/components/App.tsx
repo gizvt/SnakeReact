@@ -88,20 +88,14 @@ export class App extends Component<{}, State> {
                     showTimer={this.state.inProgress}
                     score={this.board.snake?.pelletsEaten}
                 />
-                <Row className="text-center">
-                    <Col>
-                        <Profiler
-                            id="boardProfiler"
-                            onRender={(...rest) =>
-                                console.log(rest[1], rest[2])
-                            }
-                        >
-                            <BoardComponent size={this.boardSize}>
-                                {Object.values(this.state.cells)}
-                            </BoardComponent>
-                        </Profiler>
-                    </Col>
-                </Row>
+                <Profiler
+                    id="boardProfiler"
+                    onRender={(...rest) => console.log(rest[1], rest[2])}
+                >
+                    <BoardComponent size={this.boardSize}>
+                        {Object.values(this.state.cells)}
+                    </BoardComponent>
+                </Profiler>
                 <BottomBar
                     handleShowSettings={this.handleShowSettings}
                     handleStartGame={this.handleStartGame}

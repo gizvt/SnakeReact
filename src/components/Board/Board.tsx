@@ -1,4 +1,5 @@
 import { PureComponent } from "react";
+import { Col, Row } from "react-bootstrap";
 import "./Board.css";
 
 interface Props {
@@ -12,9 +13,13 @@ export class Board extends PureComponent<Props> {
 
     render() {
         return (
-            <div className="board" style={this.style}>
-                {this.props.children}
-            </div>
+            <Row className="text-center">
+                <Col>
+                    <div className="board" style={this.style}>
+                        {this.props.children}
+                    </div>
+                </Col>
+            </Row>
         );
     }
 }
