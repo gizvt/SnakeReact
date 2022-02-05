@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "bootstrap-icons/font/bootstrap-icons.css";
 
 export function PlayerName() {
     const [playerName, setPlayerName] = useState("");

@@ -21,7 +21,9 @@ export function SettingsModal(props: Props) {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title>Settings</Modal.Title>
+                <Modal.Title>
+                    <i className="bi bi-gear me-2"></i>Settings
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
