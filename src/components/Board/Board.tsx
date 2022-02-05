@@ -1,4 +1,4 @@
-import { PureComponent } from "react";
+import { Profiler, PureComponent } from "react";
 import { Col, Row } from "react-bootstrap";
 import "./Board.css";
 
@@ -13,13 +13,18 @@ export class Board extends PureComponent<Props> {
 
     render() {
         return (
-            <Row className="text-center">
-                <Col>
-                    <div className="board" style={this.style}>
-                        {this.props.children}
-                    </div>
-                </Col>
-            </Row>
+            <Profiler
+                id="cellsProfiler"
+                onRender={(...rest) => console.log(rest[1], rest[2])}
+            >
+                <Row className="text-center">
+                    <Col>
+                        <div className="board" style={this.style}>
+                            {this.props.children}
+                        </div>
+                    </Col>
+                </Row>
+            </Profiler>
         );
     }
 }
