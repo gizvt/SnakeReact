@@ -1,5 +1,6 @@
 export * from "./Board/Board";
 export * from "./Board/Cell";
+export * from "./BottomBar/BottomBar";
 export * from "./Modals/GameOverModal";
 export * from "./Modals/SettingsModal";
 export * from "./TopBar/PlayerName";

@@ -1,18 +1,16 @@
-import inputHandler from "../logic/intput-handler";
-import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
-import { Component, Profiler, ReactElement } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Component, ReactElement } from "react";
 import {
     Board as BoardComponent,
+    BottomBar,
     Cell,
     CellType,
     GameOverModal,
-    SettingsModal,
-    Title,
-    TopBar,
     Settings,
+    SettingsModal,
+    TopBar,
 } from ".";
-import { BottomBar } from "./BottomBar/BottomBar";
+import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
+import inputHandler from "../logic/intput-handler";
 
 interface Cells {
     [key: string]: ReactElement;
