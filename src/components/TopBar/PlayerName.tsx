@@ -15,7 +15,7 @@ export function PlayerName() {
 
     return (
         <span className="lead">
-            <i className="bi bi-person-circle text-primary me-2"></i>
+            <i className="bi bi-person-circle me-2 text-react"></i>
             {playerName}
         </span>
     );

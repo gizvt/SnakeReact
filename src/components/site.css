@@ -1,3 +1,9 @@
+.board {
+    display: inline-grid;
+    border-left: 1px solid #000000;
+    border-top: 1px solid #000000;
+}
+
 .cell {
     background-color: #ffffff;
     border-right: 1px solid #000000;
@@ -12,4 +18,8 @@
 
 .pellet {
     background-color: #000000;
+}
+
+.text-react {
+    color: #61dafb;
 }

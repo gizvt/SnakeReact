@@ -22,7 +22,7 @@ export function Timer(props: Props) {
 
     return (
         <span className="lead">
-            <i className="bi bi-stopwatch text-primary me-2"></i>
+            <i className="bi bi-stopwatch me-2 text-react"></i>
             {formatTime(time)}
         </span>
     );

@@ -1,6 +1,5 @@
 import { Profiler, PureComponent } from "react";
 import { Col, Row } from "react-bootstrap";
-import "./Board.css";
 
 interface Props {
     size: number;

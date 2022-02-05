@@ -1,5 +1,4 @@
 import React from "react";
-import "./Cell.css";
 
 export type CellType = "Snake" | "Pellet" | "Empty";
 
