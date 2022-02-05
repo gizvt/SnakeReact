@@ -14,10 +14,10 @@ export function PlayerName() {
     });
 
     return (
-        <h4>
+        <span className="lead">
             <i className="bi bi-person-circle text-primary me-2"></i>
             {playerName}
-        </h4>
+        </span>
     );
 }
 

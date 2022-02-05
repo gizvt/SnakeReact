@@ -3,5 +3,9 @@ interface Props {
 }
 
 export function Score(props: Props) {
-    return <h3>Score: {props.score}</h3>;
+    return (
+        <span className="lead">
+            <i className="bi bi-gem text-primary me-2"></i>Score: {props.score}
+        </span>
+    );
 }
