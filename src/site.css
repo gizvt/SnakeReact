@@ -23,3 +23,7 @@
 .text-react {
     color: #61dafb;
 }
+
+.vh-75 {
+    height: 75vh;
+}

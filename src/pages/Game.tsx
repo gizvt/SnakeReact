@@ -8,7 +8,7 @@ import {
     Settings,
     SettingsModal,
     TopBar,
-} from ".";
+} from "../components";
 import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
 import inputHandler from "../logic/input-handler";
 
@@ -24,7 +24,7 @@ interface State {
     cells: Cells;
 }
 
-export class App extends Component<{}, State> {
+export class Game extends Component<{}, State> {
     private board: Board;
     private readonly audioPlayer: AudioPlayer = new AudioPlayer();
     private readonly emptyCells: Cells;
@@ -173,4 +173,4 @@ export class App extends Component<{}, State> {
 const sleep = (delay: number) =>
     new Promise((resolve) => setTimeout(resolve, delay));
 
-export default App;
+export default Game;
