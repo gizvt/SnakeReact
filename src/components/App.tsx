@@ -12,6 +12,7 @@ import {
     TopBar,
     Settings,
 } from ".";
+import { BottomBar } from "./BottomBar/BottomBar";
 
 interface Cells {
     [key: string]: ReactElement;
@@ -49,7 +50,9 @@ export class App extends Component<{}, State> {
             cells: cells,
         };
 
+        this.handleShowSettings = this.handleShowSettings.bind(this);
         this.handleSettingsChange = this.handleSettingsChange.bind(this);
+        this.handleStartGame = this.handleStartGame.bind(this);
     }
 
     componentDidMount() {
@@ -81,15 +84,10 @@ export class App extends Component<{}, State> {
                     handleClose={() => this.setState({ showSettings: false })}
                     handleSettingsChange={this.handleSettingsChange}
                 />
-                <Title />
-                <Row className="text-center">
-                    <Col>
-                        <TopBar
-                            showTimer={this.state.inProgress}
-                            score={this.board.snake?.pelletsEaten}
-                        />
-                    </Col>
-                </Row>
+                <TopBar
+                    showTimer={this.state.inProgress}
+                    score={this.board.snake?.pelletsEaten}
+                />
                 <Row className="text-center">
                     <Col>
                         <Profiler
@@ -104,27 +102,15 @@ export class App extends Component<{}, State> {
                         </Profiler>
                     </Col>
                 </Row>
-                <Row className="mt-4 text-center">
-                    <Col>
-                        <Button
-                            className="me-3"
-                            variant="outline-primary"
-                            onClick={() =>
-                                this.setState({ showSettings: true })
-                            }
-                        >
-                            Settings
-                        </Button>
-                        <Button onClick={async () => await this.startGame()}>
-                            Start Game
-                        </Button>
-                    </Col>
-                </Row>
+                <BottomBar
+                    handleShowSettings={this.handleShowSettings}
+                    handleStartGame={this.handleStartGame}
+                ></BottomBar>
             </>
         );
     }
 
-    private async startGame() {
+    private async handleStartGame() {
         this.setState({ inProgress: true });
         this.board.spawnSnake(this.state.settings.wrapEnabled);
         this.board.spawnPellet();
@@ -162,6 +148,10 @@ export class App extends Component<{}, State> {
             cells: { ...this.emptyCells },
             showGameOverModal: false,
         });
+    }
+
+    private handleShowSettings() {
+        this.setState({ showSettings: true });
     }
 
     private handleSettingsChange(newSettings: Settings) {

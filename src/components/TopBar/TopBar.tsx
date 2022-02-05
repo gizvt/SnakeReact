@@ -1,4 +1,5 @@
-import { PlayerName, Timer, Score } from "..";
+import { Col, Row } from "react-bootstrap";
+import { PlayerName, Timer, Score, Title } from "..";
 
 interface Props {
     score?: number;
@@ -7,10 +8,15 @@ interface Props {
 
 export function TopBar(props: Props) {
     return (
-        <div>
-            <PlayerName />
-            {/* {props.showTimer && <Timer />} */}
-            <Score score={props.score || 0} />
-        </div>
+        <>
+            <Title />
+            <Row className="text-center">
+                <Col>
+                    <PlayerName />
+                    {/* {props.showTimer && <Timer />} */}
+                    <Score score={props.score || 0} />
+                </Col>
+            </Row>
+        </>
     );
 }
