@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export function PlayerName() {
     const [playerName, setPlayerName] = useState("");
@@ -12,7 +13,12 @@ export function PlayerName() {
         fetchPlayerName();
     });
 
-    return <h3>{playerName}</h3>;
+    return (
+        <h4>
+            <i className="bi bi-person-circle text-primary me-2"></i>
+            {playerName}
+        </h4>
+    );
 }
 
 async function getPlayerName() {
