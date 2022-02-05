@@ -15,8 +15,8 @@ export class Point {
         return (
             this.x < 0 ||
             this.y < 0 ||
-            this.x === boardSize ||
-            this.y === boardSize
+            this.x >= boardSize ||
+            this.y >= boardSize
         );
     }
 
