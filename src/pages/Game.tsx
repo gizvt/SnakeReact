@@ -87,6 +87,7 @@ export class Game extends Component<{}, State> {
                 <TopBar
                     showTimer={this.state.inProgress}
                     score={this.board.snake?.pelletsEaten}
+                    spinLogo={this.state.inProgress}
                 />
                 <BoardComponent size={this.boardSize}>
                     {Object.values(this.state.cells)}
