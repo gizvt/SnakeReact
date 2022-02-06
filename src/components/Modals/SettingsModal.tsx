@@ -28,12 +28,7 @@ export function SettingsModal(props: Props) {
     }, []);
 
     return (
-        <Modal
-            show={props.show}
-            onHide={() => saveSettings(settings)}
-            backdrop="static"
-            centered
-        >
+        <Modal show={props.show} onHide={() => onCloseClick()} centered>
             <Modal.Header closeButton>
                 <Modal.Title>
                     <i className="bi bi-gear me-2"></i>Settings
