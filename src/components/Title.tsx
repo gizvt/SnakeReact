@@ -6,7 +6,9 @@ interface Props {
 }
 
 export function Title(props: Props) {
-    const className = props.spinLogo ? `me-2 logo-spin` : "me-2";
+    const className = props.spinLogo
+        ? `me-2 logo-spin`
+        : "me-2 logo-spin-limited";
 
     return (
         <span className="display-6">
