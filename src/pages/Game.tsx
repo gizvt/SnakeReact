@@ -16,6 +16,7 @@ import {
     getSettings,
     defaultSettings,
     Settings,
+    sleep,
 } from "../modules";
 import inputHandler from "../modules/services/input-handler";
 
@@ -149,8 +150,5 @@ export class Game extends Component<{}, State> {
         return <Cell key={coords} type={type} />;
     }
 }
-
-const sleep = (delay: number) =>
-    new Promise((resolve) => setTimeout(resolve, delay));
 
 export default Game;
