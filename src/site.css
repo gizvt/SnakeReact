@@ -34,7 +34,7 @@
     }
 
     .logo-spin-limited {
-        animation: spin-fast 0.8s linear;
+        animation: spin-720 0.8s linear;
     }
 }
 
@@ -47,7 +47,7 @@
     }
 }
 
-@keyframes spin-fast {
+@keyframes spin-720 {
     from {
         transform: rotate(0deg);
     }
