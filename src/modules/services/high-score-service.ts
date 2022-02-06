@@ -1,7 +1,7 @@
 const key = "highScores";
 const maxHighScores = 10;
 
-interface HighScore {
+export interface HighScore {
     id: string;
     playerName: string;
     score: number;
