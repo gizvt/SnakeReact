@@ -11,7 +11,7 @@ export function TopBar(props: Props) {
         <Row>
             <Col className="d-flex justify-content-center">
                 <Stack direction="horizontal" gap={3} className="mt-3 mb-3">
-                    <Title />
+                    <Title spinLogo={false} />
                     <div className="vr"></div>
                     <Stack direction="vertical" className="">
                         <PlayerName />
