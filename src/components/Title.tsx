@@ -1,5 +1,5 @@
 import { Image } from "react-bootstrap";
-import reactLogo from "../../assets/logo192.png";
+import reactLogo from "../assets/logo192.png";
 
 interface Props {
     spinLogo: boolean;

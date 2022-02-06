@@ -1,4 +1,4 @@
-import { Direction } from "./direction";
+import { Direction } from "../domain/direction";
 
 class InputHandler {
     private readonly inputQueue: Direction[] = [];

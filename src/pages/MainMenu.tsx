@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
 import { SettingsModal, Title } from "../components";
-import { getPlayerName, savePlayerName } from "../logic/settings-service";
+import {
+    getPlayerName,
+    savePlayerName,
+} from "../modules/services/settings-service";
 
 export function MainMenu() {
     const [showSettings, setShowSettings] = useState(false);

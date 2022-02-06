@@ -16,8 +16,8 @@ import {
     getSettings,
     defaultSettings,
     Settings,
-} from "../logic";
-import inputHandler from "../logic/input-handler";
+} from "../modules";
+import inputHandler from "../modules/services/input-handler";
 
 interface Cells {
     [key: string]: ReactElement;
@@ -99,7 +99,7 @@ export class Game extends Component<{}, State> {
 
         do {
             this.updateCellsInState();
-            await sleep(90);
+            await sleep(80);
             this.board.moveSnake(inputHandler.nextDirection);
         } while (!this.board.isInIllegalState);
 

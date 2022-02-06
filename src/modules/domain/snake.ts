@@ -1,4 +1,4 @@
-import { Sound } from "./audio-player";
+import { Sound } from "../services/audio-player";
 import { Direction } from "./direction";
 import { Point } from "./point";
 

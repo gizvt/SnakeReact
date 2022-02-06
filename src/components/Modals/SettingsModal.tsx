@@ -3,7 +3,7 @@ import {
     defaultSettings,
     getSettings,
     saveSettings,
-} from "../../logic/settings-service";
+} from "../../modules/services/settings-service";
 import { useEffect, useState } from "react";
 
 interface Props {
