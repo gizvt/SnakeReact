@@ -43,7 +43,7 @@ export function HighScores() {
                         {highScores.sort(strongestFirst).map((hs, index) => (
                             <tr>
                                 <td>{getMedal(index)}</td>
-                                <td>{index + len - 1}</td>
+                                <td>{index + 1}</td>
                                 <td>{hs.playerName}</td>
                                 <td>{hs.score}</td>
                                 <td>{hs.date}</td>
