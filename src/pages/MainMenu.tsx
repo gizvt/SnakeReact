@@ -27,9 +27,9 @@ export function MainMenu() {
             />
             <Row className="text-center vh-75 d-flex align-items-center">
                 <Col md={3} className="mx-auto">
-                    <Stack direction="vertical" gap={4}>
+                    <Stack direction="vertical" gap={2}>
                         <Title spinLogo={true} />
-                        <InputGroup className="mt-5">
+                        <InputGroup className="mt-4 mb-4">
                             <InputGroup.Text>
                                 <i className="bi bi-person-circle"></i>
                             </InputGroup.Text>
@@ -39,14 +39,23 @@ export function MainMenu() {
                                 onChange={(e) => setPlayerName(e.target.value)}
                             ></Form.Control>
                         </InputGroup>
-                        <Button onClick={() => setShowSettings(true)}>
+                        <Button
+                            variant="outline-primary"
+                            onClick={() => setShowSettings(true)}
+                        >
                             Settings
+                        </Button>
+                        <Button href="/high-scores" variant="outline-primary">
+                            High Scores
+                            <i className="bi bi-chevron-right ms-2"></i>
                         </Button>
                         <Button
                             href="/game"
                             onClick={() => savePlayerName(playerName)}
+                            className=""
                         >
-                            Play!
+                            Play
+                            <i className="bi bi-chevron-right ms-2"></i>
                         </Button>
                     </Stack>
                 </Col>
