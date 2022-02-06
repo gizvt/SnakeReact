@@ -17,7 +17,7 @@ export function HighScores() {
 
     return (
         <Row className="mt-5">
-            <Col className="text-center">
+            <Col sm="8" className="mx-auto">
                 <Stack direction="horizontal" className="mb-4">
                     <Button
                         className="me-3 me-auto"
@@ -42,7 +42,9 @@ export function HighScores() {
                     <tbody>
                         {highScores.sort(strongestFirst).map((hs, index) => (
                             <tr>
-                                <td>{getMedal(index)}</td>
+                                <td className="text-center">
+                                    {getMedal(index)}
+                                </td>
                                 <td>{index + 1}</td>
                                 <td>{hs.playerName}</td>
                                 <td>{hs.score}</td>
