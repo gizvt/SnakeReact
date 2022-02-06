@@ -4,6 +4,7 @@ import { getHighScores, HighScore } from "../modules";
 
 export function HighScores() {
     const [highScores, setHighScores] = useState<HighScore[]>([]);
+    const len = highScores.length;
 
     useEffect(() => {
         async function fetchHighScores() {
@@ -31,14 +32,18 @@ export function HighScores() {
                 <Table striped bordered hover>
                     <thead>
                         <tr>
+                            <th></th>
+                            <th>#</th>
                             <th>Player Name</th>
                             <th>Score</th>
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {highScores.map((hs) => (
+                        {highScores.map((hs, index) => (
                             <tr>
+                                <td>{getMedal(index)}</td>
+                                <td>{index + len - 1}</td>
                                 <td>{hs.playerName}</td>
                                 <td>{hs.score}</td>
                                 <td>{hs.date}</td>
@@ -50,3 +55,6 @@ export function HighScores() {
         </Row>
     );
 }
+
+const getMedal = (index: number) =>
+    index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : null;
