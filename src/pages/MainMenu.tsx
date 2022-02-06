@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
+import { Button, Col, FloatingLabel, Form, Row, Stack } from "react-bootstrap";
 import { SettingsModal, Title } from "../components";
 import {
     getPlayerName,
@@ -29,16 +29,20 @@ export function MainMenu() {
                 <Col sm="auto" className="mx-auto">
                     <Stack direction="vertical" gap={2}>
                         <Title spinLogo={true} />
-                        <InputGroup className="mt-4 mb-4">
-                            <InputGroup.Text>
-                                <i className="bi bi-person-circle"></i>
-                            </InputGroup.Text>
+
+                        <FloatingLabel
+                            className="mt-4 mb-4"
+                            label="Player name"
+                            placeholder=" "
+                        >
                             <Form.Control
                                 type="text"
+                                placeholder=" "
                                 value={playerName}
                                 onChange={(e) => setPlayerName(e.target.value)}
                             ></Form.Control>
-                        </InputGroup>
+                        </FloatingLabel>
+
                         <Button
                             variant="outline-primary"
                             onClick={() => setShowSettings(true)}
