@@ -1,22 +1,36 @@
 import { Button, Form, Modal } from "react-bootstrap";
-
-export interface Settings {
-    wrapEnabled: boolean;
-    audioEnabled: boolean;
-}
+import {
+    defaultSettings,
+    getSettings,
+    saveSettings,
+} from "../../logic/settings-service";
+import { useEffect, useState } from "react";
 
 interface Props {
     show: boolean;
     handleClose(): void;
-    handleSettingsChange(newSettings: Settings): void;
-    settings: Settings;
 }
 
 export function SettingsModal(props: Props) {
+    const [settings, setSettings] = useState(defaultSettings);
+    const onCloseClick = async () => {
+        await saveSettings(settings);
+        props.handleClose();
+    };
+
+    useEffect(() => {
+        async function fetchSettings() {
+            const settings = await getSettings();
+            setSettings(settings);
+        }
+
+        fetchSettings();
+    }, []);
+
     return (
         <Modal
             show={props.show}
-            onHide={props.handleClose}
+            onHide={() => saveSettings(settings)}
             backdrop="static"
             centered
         >
@@ -29,30 +43,30 @@ export function SettingsModal(props: Props) {
                 <Form>
                     <Form.Check
                         onChange={(e) =>
-                            props.handleSettingsChange({
-                                ...props.settings,
+                            setSettings({
+                                ...settings,
                                 wrapEnabled: e.target.checked,
                             })
                         }
                         type="switch"
                         label="Wrap"
-                        checked={props.settings.wrapEnabled}
+                        checked={settings.wrapEnabled}
                     />
                     <Form.Check
                         onChange={(e) =>
-                            props.handleSettingsChange({
-                                ...props.settings,
+                            setSettings({
+                                ...settings,
                                 audioEnabled: e.target.checked,
                             })
                         }
                         type="switch"
                         label="Audio"
-                        checked={props.settings.audioEnabled}
+                        checked={settings.audioEnabled}
                     />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={props.handleClose}>
+                <Button variant="secondary" onClick={() => onCloseClick()}>
                     Close
                 </Button>
             </Modal.Footer>

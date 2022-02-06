@@ -5,11 +5,18 @@ import {
     Cell,
     CellType,
     GameOverModal,
-    Settings,
-    SettingsModal,
     TopBar,
 } from "../components";
-import { AudioPlayer, Board, Direction, Point, Sound } from "../logic";
+import {
+    AudioPlayer,
+    Board,
+    Direction,
+    Point,
+    Sound,
+    getSettings,
+    defaultSettings,
+    Settings,
+} from "../logic";
 import inputHandler from "../logic/input-handler";
 
 interface Cells {
@@ -19,20 +26,20 @@ interface Cells {
 interface State {
     inProgress: boolean;
     showGameOverModal: boolean;
-    showSettings: boolean;
-    settings: Settings;
     cells: Cells;
 }
 
 export class Game extends Component<{}, State> {
     private board: Board;
-    private readonly audioPlayer: AudioPlayer = new AudioPlayer();
+    private readonly audioPlayer: AudioPlayer;
+    private settings: Settings = defaultSettings;
     private readonly emptyCells: Cells;
     private boardSize = 15;
 
     constructor(props: {}) {
         super(props);
         this.board = new Board(this.boardSize);
+        this.audioPlayer = new AudioPlayer();
         const cells = this.createCells();
 
         this.emptyCells = cells;
@@ -40,20 +47,19 @@ export class Game extends Component<{}, State> {
         this.state = {
             inProgress: false,
             showGameOverModal: false,
-            showSettings: false,
-            settings: {
-                wrapEnabled: false,
-                audioEnabled: true,
-            },
             cells: cells,
         };
 
-        this.handleShowSettings = this.handleShowSettings.bind(this);
-        this.handleSettingsChange = this.handleSettingsChange.bind(this);
         this.handleStartGame = this.handleStartGame.bind(this);
     }
 
     componentDidMount() {
+        getSettings().then((settings) => {
+            this.settings = settings;
+            this.audioPlayer.isEnabled = this.settings.audioEnabled;
+            this.audioPlayer.init();
+        });
+
         document.addEventListener("keydown", (keyboardEvent) => {
             if (!this.state.inProgress) {
                 return;
@@ -64,8 +70,6 @@ export class Game extends Component<{}, State> {
                 this.board.snake?.direction || Direction.None
             );
         });
-
-        this.audioPlayer.init();
     }
 
     render() {
@@ -76,12 +80,6 @@ export class Game extends Component<{}, State> {
                     score={this.board.snake?.pelletsEaten || 0}
                     handleClose={() => this.handleGameOver()}
                 />
-                <SettingsModal
-                    show={this.state.showSettings}
-                    settings={this.state.settings}
-                    handleClose={() => this.setState({ showSettings: false })}
-                    handleSettingsChange={this.handleSettingsChange}
-                />
                 <TopBar
                     showTimer={this.state.inProgress}
                     score={this.board.snake?.pelletsEaten}
@@ -89,17 +87,14 @@ export class Game extends Component<{}, State> {
                 <BoardComponent size={this.boardSize}>
                     {Object.values(this.state.cells)}
                 </BoardComponent>
-                <BottomBar
-                    handleShowSettings={this.handleShowSettings}
-                    handleStartGame={this.handleStartGame}
-                ></BottomBar>
+                <BottomBar handleStartGame={this.handleStartGame}></BottomBar>
             </>
         );
     }
 
     private async handleStartGame() {
         this.setState({ inProgress: true });
-        this.board.spawnSnake(this.state.settings.wrapEnabled);
+        this.board.spawnSnake(this.settings.wrapEnabled);
         this.board.spawnPellet();
 
         do {
@@ -134,21 +129,6 @@ export class Game extends Component<{}, State> {
         this.setState({
             cells: { ...this.emptyCells },
             showGameOverModal: false,
-        });
-    }
-
-    private handleShowSettings() {
-        this.setState({ showSettings: true });
-    }
-
-    private handleSettingsChange(newSettings: Settings) {
-        this.audioPlayer.isEnabled = newSettings.audioEnabled;
-
-        this.setState({
-            settings: {
-                ...this.state.settings,
-                ...newSettings,
-            },
         });
     }
 

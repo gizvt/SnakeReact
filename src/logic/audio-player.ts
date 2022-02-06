@@ -4,8 +4,9 @@ export enum Sound {
 }
 
 export class AudioPlayer {
-    isEnabled: boolean = true;
     audio: HTMLAudioElement = new Audio();
+
+    constructor(public isEnabled: boolean = false) {}
 
     play(sound: Sound) {
         if (this.isEnabled) {
