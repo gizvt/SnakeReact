@@ -2,6 +2,7 @@ const key = "highScores";
 const maxHighScores = 10;
 
 interface HighScore {
+    id: string;
     playerName: string;
     score: number;
     date: string;
@@ -22,13 +23,21 @@ export async function addHighScore(playerName: string, score: number) {
         throw new Error("Score is not a new high score.");
     }
 
+    let highScores = await getHighScores();
+
+    if (highScores.length >= maxHighScores) {
+        deleteWeakestHighScore(highScores);
+    }
+
     const highScore: HighScore = {
+        id: Date.now().toString(),
         date: new Date(Date.now()).toISOString(),
         playerName: playerName,
         score: score,
     };
 
-    localStorage.setItem(key, JSON.stringify(highScore));
+    highScores.push(highScore);
+    localStorage.setItem(key, JSON.stringify(highScores));
 }
 
 export async function isNewHighScore(score: number) {
@@ -40,6 +49,15 @@ export async function isNewHighScore(score: number) {
 
     const weakestHighScore = findWeakestHighScore(highScores);
     return weakestHighScore.score < score;
+}
+
+function deleteWeakestHighScore(highScores: HighScore[]) {
+    const weakestHighScore = findWeakestHighScore(highScores);
+
+    highScores.splice(
+        highScores.findIndex((hs) => hs.id === weakestHighScore.id),
+        1
+    );
 }
 
 function findWeakestHighScore(highScores: HighScore[]) {

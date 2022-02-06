@@ -17,6 +17,9 @@ import {
     defaultSettings,
     Settings,
     sleep,
+    isNewHighScore,
+    addHighScore,
+    getPlayerName,
 } from "../modules";
 import inputHandler from "../modules/services/input-handler";
 
@@ -124,7 +127,14 @@ export class Game extends Component<{}, State> {
         this.setState({ cells });
     }
 
-    private handleGameOver() {
+    private async handleGameOver() {
+        const score = this.board.snake!.pelletsEaten;
+        const playerName = await getPlayerName();
+
+        if (playerName && (await isNewHighScore(score))) {
+            await addHighScore(playerName, score);
+        }
+
         this.board.reset();
 
         this.setState({
