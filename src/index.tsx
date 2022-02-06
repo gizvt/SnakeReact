@@ -10,7 +10,7 @@ import { App } from "./App";
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            <Container>
+            <Container fluid>
                 <App />
             </Container>
         </BrowserRouter>

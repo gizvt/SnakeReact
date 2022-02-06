@@ -26,7 +26,7 @@ export function MainMenu() {
                 handleClose={() => setShowSettings(false)}
             />
             <Row className="text-center vh-75 d-flex align-items-center">
-                <Col md={3} className="mx-auto">
+                <Col sm="auto" className="mx-auto">
                     <Stack direction="vertical" gap={2}>
                         <Title spinLogo={true} />
                         <InputGroup className="mt-4 mb-4">
