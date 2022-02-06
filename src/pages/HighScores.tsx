@@ -40,7 +40,7 @@ export function HighScores() {
                         </tr>
                     </thead>
                     <tbody>
-                        {highScores.map((hs, index) => (
+                        {highScores.sort(strongestFirst).map((hs, index) => (
                             <tr>
                                 <td>{getMedal(index)}</td>
                                 <td>{index + len - 1}</td>
@@ -58,3 +58,6 @@ export function HighScores() {
 
 const getMedal = (index: number) =>
     index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : null;
+
+const strongestFirst = (a: HighScore, b: HighScore) =>
+    b.score > a.score || (b.score === a.score && b.date < a.date) ? 1 : -1;
