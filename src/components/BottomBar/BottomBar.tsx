@@ -1,10 +1,11 @@
+import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
 
 interface Props {
     handleStartGame(): void;
 }
 
-export function BottomBar(props: Props) {
+export const BottomBar = React.memo(function (props: Props) {
     return (
         <Row className="mt-4 text-center">
             <Col>
@@ -16,4 +17,4 @@ export function BottomBar(props: Props) {
             </Col>
         </Row>
     );
-}
+});

@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
     handleClose(): void;
 }
 
-export function GameOverModal(props: Props) {
+export const GameOverModal = React.memo(function (props: Props) {
     return (
         <Modal show={props.show} onHide={props.handleClose} centered>
             <Modal.Header closeButton>
@@ -20,4 +21,4 @@ export function GameOverModal(props: Props) {
             </Modal.Footer>
         </Modal>
     );
-}
+});

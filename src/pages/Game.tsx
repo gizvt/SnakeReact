@@ -7,6 +7,7 @@ import {
     GameOverModal,
     TopBar,
 } from "../components";
+import { HighScoreToast } from "../components/Status/HighScoreToast";
 import {
     AudioPlayer,
     Board,
@@ -23,6 +24,9 @@ import {
 } from "../modules";
 import inputHandler from "../modules/services/input-handler";
 
+// TODO: check that not all of the components are rerendering on every game
+// loop. The toast seems to, because state has changed in the parent maybe?
+
 interface Cells {
     [key: string]: ReactElement;
 }
@@ -30,6 +34,8 @@ interface Cells {
 interface State {
     inProgress: boolean;
     showGameOverModal: boolean;
+    showHighScoreToast: boolean;
+    score: number;
     cells: Cells;
 }
 
@@ -51,10 +57,15 @@ export class Game extends Component<{}, State> {
         this.state = {
             inProgress: false,
             showGameOverModal: false,
+            showHighScoreToast: false,
+            score: 0,
             cells: cells,
         };
 
+        this.handleGameOver = this.handleGameOver.bind(this);
         this.handleStartGame = this.handleStartGame.bind(this);
+        this.handleHighScoreToastClose =
+            this.handleHighScoreToastClose.bind(this);
     }
 
     componentDidMount() {
@@ -81,12 +92,17 @@ export class Game extends Component<{}, State> {
             <>
                 <GameOverModal
                     show={this.state.showGameOverModal}
-                    score={this.board.snake?.pelletsEaten || 0}
-                    handleClose={() => this.handleGameOver()}
+                    score={this.state.score}
+                    handleClose={this.handleGameOver}
+                />
+                <HighScoreToast
+                    show={this.state.showHighScoreToast}
+                    score={this.state.score}
+                    handleClose={this.handleHighScoreToastClose}
                 />
                 <TopBar
                     showTimer={this.state.inProgress}
-                    score={this.board.snake?.pelletsEaten}
+                    score={this.state.score}
                     spinLogo={this.state.inProgress}
                 />
                 <BoardComponent size={this.boardSize}>
@@ -97,14 +113,18 @@ export class Game extends Component<{}, State> {
         );
     }
 
+    private handleHighScoreToastClose() {
+        this.setState({ showHighScoreToast: false });
+    }
+
     private async handleStartGame() {
         this.setState({ inProgress: true });
         this.board.spawnSnake(this.settings.wrapEnabled);
         this.board.spawnPellet();
 
         do {
-            this.updateCellsInState();
-            await sleep(80);
+            this.updateCellsAndScoreInState();
+            await sleep(90);
             this.board.moveSnake(inputHandler.nextDirection);
         } while (!this.board.isInIllegalState);
 
@@ -112,10 +132,13 @@ export class Game extends Component<{}, State> {
             new CustomEvent("PlayAudio", { detail: Sound.GameOver })
         );
 
-        this.setState({ inProgress: false, showGameOverModal: true });
+        this.setState({
+            inProgress: false,
+            showGameOverModal: true,
+        });
     }
 
-    private updateCellsInState() {
+    private updateCellsAndScoreInState() {
         let cells = { ...this.emptyCells };
         const pellet = this.board.pellet!.point.toString();
 
@@ -125,22 +148,23 @@ export class Game extends Component<{}, State> {
         );
 
         cells[pellet] = this.createCell(pellet, "Pellet");
-        this.setState({ cells });
+        this.setState({ cells, score: this.board.snake!.pelletsEaten });
     }
 
     private async handleGameOver() {
         const score = this.board.snake!.pelletsEaten;
         const playerName = await getPlayerName();
+        this.board.reset();
 
         if (playerName && (await isNewHighScore(score))) {
             await addHighScore(playerName, score);
+            this.setState({ showHighScoreToast: true });
         }
-
-        this.board.reset();
 
         this.setState({
             cells: { ...this.emptyCells },
             showGameOverModal: false,
+            score: score,
         });
     }
 

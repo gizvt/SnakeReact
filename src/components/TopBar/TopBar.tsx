@@ -1,3 +1,4 @@
+import React from "react";
 import { Col, Row, Stack } from "react-bootstrap";
 import { PlayerName, Timer, Score, Title } from "..";
 
@@ -7,7 +8,7 @@ interface Props {
     spinLogo: boolean;
 }
 
-export function TopBar(props: Props) {
+export const TopBar = React.memo(function (props: Props) {
     return (
         <Row>
             <Col className="d-flex justify-content-center">
@@ -23,4 +24,4 @@ export function TopBar(props: Props) {
             </Col>
         </Row>
     );
-}
+});
