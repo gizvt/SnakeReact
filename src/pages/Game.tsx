@@ -32,7 +32,7 @@ interface Cells {
 }
 
 interface State {
-    inProgress: boolean;
+    status: "Idle" | "InProgress" | "Paused";
     showGameOverModal: boolean;
     showHighScoreToast: boolean;
     score: number;
@@ -55,7 +55,7 @@ export class Game extends Component<{}, State> {
         this.emptyCells = cells;
 
         this.state = {
-            inProgress: false,
+            status: "Idle",
             showGameOverModal: false,
             showHighScoreToast: false,
             score: 0,
@@ -76,14 +76,25 @@ export class Game extends Component<{}, State> {
         });
 
         document.addEventListener("keydown", (keyboardEvent) => {
-            if (!this.state.inProgress) {
+            if (this.state.status === "Idle") {
                 return;
             }
 
-            inputHandler.setNextDirection(
-                Direction.fromKey(keyboardEvent.key),
-                this.board.snake?.direction || Direction.None
-            );
+            if (keyboardEvent.key === " ") {
+                // Game is either in progress or paused. Toggle pause.
+                this.setState({
+                    status:
+                        this.state.status === "InProgress"
+                            ? "Paused"
+                            : "InProgress",
+                });
+            } else if (this.state.status === "InProgress") {
+                // Only listen to inputs if the game is in progress.
+                inputHandler.setNextDirection(
+                    Direction.fromKey(keyboardEvent.key),
+                    this.board.snake?.direction || Direction.None
+                );
+            }
         });
     }
 
@@ -101,9 +112,9 @@ export class Game extends Component<{}, State> {
                     handleClose={this.handleHighScoreToastClose}
                 />
                 <TopBar
-                    showTimer={this.state.inProgress}
+                    showTimer={this.state.status === "InProgress"}
                     score={this.state.score}
-                    spinLogo={this.state.inProgress}
+                    spinLogo={this.state.status === "InProgress"}
                 />
                 <BoardComponent size={this.boardSize}>
                     {Object.values(this.state.cells)}
@@ -118,14 +129,31 @@ export class Game extends Component<{}, State> {
     }
 
     private async handleStartGame() {
-        this.setState({ inProgress: true });
         this.board.spawnSnake(this.settings.wrapEnabled);
         this.board.spawnPellet();
+        const cells = this.getNewBoardState();
 
+        // startGameLoop is passed as a callback so as to guarantee that status
+        // has been updated to "InProgress" in state when the game loop starts.
+        // The game loop needs to start checking this immediately to decide
+        // whether or not the game is paused or not.
+        this.setState(
+            { cells, status: "InProgress" },
+            async () => await this.startGameLoop()
+        );
+    }
+
+    private async startGameLoop() {
         do {
-            this.updateCellsAndScoreInState();
-            await sleep(90);
-            this.board.moveSnake(inputHandler.nextDirection);
+            await sleep(80);
+
+            if (this.state.status === "InProgress") {
+                this.board.moveSnake(inputHandler.nextDirection);
+                this.setState({
+                    cells: this.getNewBoardState(),
+                    score: this.board.snake!.pelletsEaten,
+                });
+            }
         } while (!this.board.isInIllegalState);
 
         document.dispatchEvent(
@@ -133,12 +161,12 @@ export class Game extends Component<{}, State> {
         );
 
         this.setState({
-            inProgress: false,
+            status: "Idle",
             showGameOverModal: true,
         });
     }
 
-    private updateCellsAndScoreInState() {
+    private getNewBoardState() {
         let cells = { ...this.emptyCells };
         const pellet = this.board.pellet!.point.toString();
 
@@ -148,7 +176,7 @@ export class Game extends Component<{}, State> {
         );
 
         cells[pellet] = this.createCell(pellet, "Pellet");
-        this.setState({ cells, score: this.board.snake!.pelletsEaten });
+        return cells;
     }
 
     private async handleGameOver() {
