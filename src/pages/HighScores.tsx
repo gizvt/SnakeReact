@@ -4,7 +4,6 @@ import { getHighScores, HighScore } from "../modules";
 
 export function HighScores() {
     const [highScores, setHighScores] = useState<HighScore[]>([]);
-    const len = highScores.length;
 
     useEffect(() => {
         async function fetchHighScores() {
