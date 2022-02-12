@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import {
     defaultSettings,
+    GameMode,
     getPlayerName,
     getSettings,
     savePlayerName,
@@ -23,6 +24,8 @@ interface Props {
 export function SettingsSideBar(props: Props) {
     const [playerName, setPlayerName] = useState("");
     const [settings, setSettings] = useState(defaultSettings);
+
+    const chosenGameMode = () => settings.gameMode;
 
     const onHide = async () => {
         await saveSettings(settings);
@@ -73,28 +76,58 @@ export function SettingsSideBar(props: Props) {
                             <i className="bi bi-sliders me-2"></i>Game
                         </Card.Header>
                         <Card.Body>
-                            <Form.Check
-                                onChange={(e) =>
-                                    setSettings({
-                                        ...settings,
-                                        wrapEnabled: e.target.checked,
-                                    })
-                                }
-                                type="switch"
-                                label="Wrap"
-                                checked={settings.wrapEnabled}
-                            />
-                            <Form.Check
-                                onChange={(e) =>
-                                    setSettings({
-                                        ...settings,
-                                        audioEnabled: e.target.checked,
-                                    })
-                                }
-                                type="switch"
-                                label="Audio"
-                                checked={settings.audioEnabled}
-                            />
+                            <Form>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Game mode</Form.Label>
+                                    <Form.Select
+                                        onChange={(e) =>
+                                            setSettings({
+                                                ...settings,
+                                                gameMode: e.target
+                                                    .value as GameMode,
+                                            })
+                                        }
+                                    >
+                                        <option
+                                            selected={
+                                                settings.gameMode === "classic"
+                                            }
+                                            value={"classic"}
+                                        >
+                                            Classic
+                                        </option>
+                                        <option
+                                            selected={
+                                                settings.gameMode === "wrap"
+                                            }
+                                            value={"wrap"}
+                                        >
+                                            Wrap
+                                        </option>
+                                        <option
+                                            selected={
+                                                settings.gameMode === "portal"
+                                            }
+                                            value={"portal"}
+                                        >
+                                            Portal
+                                        </option>
+                                    </Form.Select>
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Check
+                                        onChange={(e) =>
+                                            setSettings({
+                                                ...settings,
+                                                audioEnabled: e.target.checked,
+                                            })
+                                        }
+                                        type="switch"
+                                        label="Audio"
+                                        checked={settings.audioEnabled}
+                                    />
+                                </Form.Group>
+                            </Form>
                         </Card.Body>
                     </Card>
                     <Card>
