@@ -52,7 +52,9 @@ export function SettingsSideBar(props: Props) {
             <Offcanvas.Body className="pt-0">
                 <Stack direction="vertical" gap={4}>
                     <Card>
-                        <Card.Header>Player</Card.Header>
+                        <Card.Header>
+                            <i className="bi bi-person-circle me-2"></i> Player
+                        </Card.Header>
                         <Card.Body>
                             <FloatingLabel label="Name" placeholder=" ">
                                 <Form.Control
@@ -67,7 +69,9 @@ export function SettingsSideBar(props: Props) {
                         </Card.Body>
                     </Card>
                     <Card>
-                        <Card.Header>Game</Card.Header>
+                        <Card.Header>
+                            <i className="bi bi-sliders me-2"></i>Game
+                        </Card.Header>
                         <Card.Body>
                             <Form.Check
                                 onChange={(e) =>
@@ -94,7 +98,9 @@ export function SettingsSideBar(props: Props) {
                         </Card.Body>
                     </Card>
                     <Card>
-                        <Card.Header>Controls</Card.Header>
+                        <Card.Header>
+                            <i className="bi bi-dpad me-2"></i>Controls
+                        </Card.Header>
                         <Card.Body>
                             <kbd>w a s d</kbd> or <kbd>↑ ← ↓ →</kbd> to move{" "}
                             <br />
