@@ -6,8 +6,8 @@ import {
     CellType,
     GameOverModal,
     TopBar,
+    HighScoreToast,
 } from "../components";
-import { HighScoreToast } from "../components/Status/HighScoreToast";
 import {
     AudioPlayer,
     Board,

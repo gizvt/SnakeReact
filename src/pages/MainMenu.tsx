@@ -1,80 +1,35 @@
-import { useEffect, useState } from "react";
-import {
-    Button,
-    Card,
-    Col,
-    FloatingLabel,
-    Form,
-    Row,
-    Stack,
-} from "react-bootstrap";
-import { SettingsModal, Title } from "../components";
-import { ControlsModal } from "../components/Status/ControlsModal";
-import {
-    getPlayerName,
-    savePlayerName,
-} from "../modules/services/settings-service";
+import { useState } from "react";
+import { Button, Col, Row, Stack } from "react-bootstrap";
+import { SettingsSideBar, Title } from "../components";
 
 export function MainMenu() {
-    const [showControls, setShowControls] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
-    const [playerName, setPlayerName] = useState("");
 
-    useEffect(() => {
-        async function fetchPlayerName() {
-            const playerName = await getPlayerName();
-            playerName && setPlayerName(playerName);
-        }
-
-        fetchPlayerName();
-    }, []);
+    const showSideBar = () => setShowSettings(true);
+    const hideSideBar = () => setShowSettings(false);
 
     return (
         <>
-            <SettingsModal
+            <SettingsSideBar
                 show={showSettings}
-                handleClose={() => setShowSettings(false)}
-            />
-            <ControlsModal
-                show={showControls}
-                handleClose={() => setShowControls(false)}
-            />
+                handleClose={hideSideBar}
+            ></SettingsSideBar>
             <Row className="text-center vh-75 d-flex align-items-center">
                 <Col sm="auto" className="mx-auto">
                     <Stack direction="vertical" gap={2}>
                         <Title spinLogo={true} />
-                        <FloatingLabel
-                            label="Player name"
-                            placeholder=" "
+                        <Button
+                            variant="outline-primary"
+                            onClick={showSideBar}
                             className="mt-5"
                         >
-                            <Form.Control
-                                type="text"
-                                placeholder=" "
-                                value={playerName}
-                                onChange={(e) => setPlayerName(e.target.value)}
-                            ></Form.Control>
-                        </FloatingLabel>
-                        <Button
-                            variant="outline-primary"
-                            onClick={() => setShowSettings(true)}
-                        >
                             Settings
-                        </Button>
-                        <Button
-                            variant="outline-primary"
-                            onClick={() => setShowControls(true)}
-                        >
-                            Controls
                         </Button>
                         <Button href="/high-scores" variant="outline-primary">
                             High Scores
                             <i className="bi bi-chevron-right ms-2"></i>
                         </Button>
-                        <Button
-                            href="/game"
-                            onClick={() => savePlayerName(playerName)}
-                        >
+                        <Button href="/game">
                             Play
                             <i className="bi bi-chevron-right ms-2"></i>
                         </Button>
