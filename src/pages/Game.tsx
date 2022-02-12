@@ -22,6 +22,7 @@ import {
     addHighScore,
     getPlayerName,
 } from "../modules";
+import { MultiPelletBoard } from "../modules/domain/board/multi-pellet-board";
 import inputHandler from "../modules/services/input-handler";
 
 // TODO: check that not all of the components are rerendering on every game
@@ -40,7 +41,7 @@ interface State {
 }
 
 export class Game extends Component<{}, State> {
-    private board: Board;
+    private board: MultiPelletBoard;
     private readonly audioPlayer: AudioPlayer;
     private settings: Settings = defaultSettings;
     private readonly emptyCells: Cells;
@@ -48,7 +49,7 @@ export class Game extends Component<{}, State> {
 
     constructor(props: {}) {
         super(props);
-        this.board = new Board(this.boardSize);
+        this.board = new MultiPelletBoard(15);
         this.audioPlayer = new AudioPlayer();
         const cells = this.createCells();
 
@@ -133,7 +134,7 @@ export class Game extends Component<{}, State> {
 
     private async handleStartGame() {
         this.board.spawnSnake(this.settings.wrapEnabled);
-        this.board.spawnPellet();
+        this.board.spawnPellets(2);
         const cells = this.getNewBoardState();
 
         // startGameLoop is passed as a callback so as to guarantee that status
@@ -148,7 +149,7 @@ export class Game extends Component<{}, State> {
 
     private async startGameLoop() {
         do {
-            await sleep(85);
+            await sleep(90);
 
             if (this.state.status === "Paused") {
                 continue;
@@ -182,14 +183,22 @@ export class Game extends Component<{}, State> {
 
     private getNewBoardState() {
         let cells = { ...this.emptyCells };
-        const pellet = this.board.pellet!.point.toString();
+        //const pellet = this.board.pellets!.point.toString();
 
         this.board.snake!.points.forEach(
             (p) =>
                 (cells[p.toString()] = this.createCell(p.toString(), "Snake"))
         );
 
-        cells[pellet] = this.createCell(pellet, "Pellet");
+        this.board.pellets!.forEach(
+            (p) =>
+                (cells[p.point.toString()] = this.createCell(
+                    p.point.toString(),
+                    "Pellet"
+                ))
+        );
+
+        // cells[pellet] = this.createCell(pellet, "Pellet");
         return cells;
     }
 

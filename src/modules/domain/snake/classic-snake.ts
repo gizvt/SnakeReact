@@ -1,14 +1,15 @@
 import { Sound } from "../..";
 import { Direction } from "../direction";
+import { Pellet } from "../pellet";
 import { Point } from "../point";
 import { Snake } from "./snake";
 
 export class ClassicSnake extends Snake {
-    public move(direction: Direction, pelletPoint: Point): void {
+    public move(direction: Direction, pellets: Pellet[]): void {
         this.changeDirection(direction);
         let newHeadPoint = this.peekHead().move(this._direction);
 
-        if (newHeadPoint.equals(pelletPoint)) {
+        if (pellets.some((p) => p.point.equals(newHeadPoint))) {
             document.dispatchEvent(
                 new CustomEvent("PlayAudio", { detail: Sound.PelletEaten })
             );

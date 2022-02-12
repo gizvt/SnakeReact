@@ -4,20 +4,16 @@ import { Pellet } from "../pellet";
 import { Point } from "../point";
 import { Snake } from "./snake";
 
-export class WrapSnake extends Snake {
-    public move(
-        direction: Direction,
-        pellets: Pellet[],
-        boardSize: number
-    ): void {
+export class PortalSnake extends Snake {
+    public move(direction: Direction, pellets: Pellet[]): void {
         this.changeDirection(direction);
         let newHeadPoint = this.peekHead().move(this._direction);
-
-        if (newHeadPoint.isOutOfBounds(boardSize)) {
-            newHeadPoint = newHeadPoint.wrap(this._direction, boardSize);
-        }
+        const [first, second] = pellets.map((p) => p.point);
 
         if (pellets.some((p) => p.point.equals(newHeadPoint))) {
+            // Warp the new head to the Pellet that wasn't eaten.
+            newHeadPoint = newHeadPoint.equals(first) ? second : first;
+
             document.dispatchEvent(
                 new CustomEvent("PlayAudio", { detail: Sound.PelletEaten })
             );

@@ -1,4 +1,5 @@
 import { Direction } from "../direction";
+import { Pellet } from "../pellet";
 import { Point } from "../point";
 
 export abstract class Snake {
@@ -50,7 +51,7 @@ export abstract class Snake {
 
     public abstract move(
         direction: Direction,
-        pelletPoint: Point,
+        pellets: Pellet[],
         boardSize: number
     ): void;
 

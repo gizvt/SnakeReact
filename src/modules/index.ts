@@ -1,4 +1,4 @@
-export * from "./domain/board";
+export * from "./domain/board/board";
 export * from "./domain/direction";
 export * from "./domain/pellet";
 export * from "./domain/point";
