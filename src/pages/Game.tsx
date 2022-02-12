@@ -119,7 +119,10 @@ export class Game extends Component<{}, State> {
                 <BoardComponent size={this.boardSize}>
                     {Object.values(this.state.cells)}
                 </BoardComponent>
-                <BottomBar handleStartGame={this.handleStartGame}></BottomBar>
+                <BottomBar
+                    handleStartGame={this.handleStartGame}
+                    disableStartButton={this.state.status !== "Idle"}
+                ></BottomBar>
             </>
         );
     }
