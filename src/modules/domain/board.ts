@@ -1,7 +1,9 @@
 import { Direction } from "./direction";
 import { Pellet } from "./pellet";
 import { Point } from "./point";
-import { Snake } from "./snake";
+import { ClassicSnake } from "./snake/classic-snake";
+import { Snake } from "./snake/snake";
+import { WrapSnake } from "./snake/wrap-snake";
 
 export class Board {
     constructor(
@@ -35,7 +37,16 @@ export class Board {
             centrePoint.move(Direction.Right),
         ];
 
-        this.snake = new Snake(points, wrapEnabled);
+        switch (wrapEnabled) {
+            case true:
+                this.snake = new WrapSnake(points);
+                break;
+            case false:
+                this.snake = new ClassicSnake(points);
+                break;
+            default:
+                throw new Error("Unrecognised game mode.");
+        }
     }
 
     spawnPellet() {
