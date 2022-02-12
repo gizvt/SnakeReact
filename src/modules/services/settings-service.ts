@@ -1,14 +1,18 @@
+import { GameMode } from "..";
+
 const settingsKey = "settings";
 const playerNameKey = "playerName";
 
 export const defaultSettings: Settings = {
     wrapEnabled: false,
     audioEnabled: true,
+    gameMode: "classic",
 };
 
 export interface Settings {
     wrapEnabled: boolean;
     audioEnabled: boolean;
+    gameMode: GameMode;
 }
 
 export async function getSettings() {

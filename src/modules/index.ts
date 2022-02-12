@@ -1,5 +1,6 @@
 export * from "./domain/board/board";
 export * from "./domain/direction";
+export * from "./domain/game-modes";
 export * from "./domain/pellet";
 export * from "./domain/point";
 export * from "./domain/snake/snake";

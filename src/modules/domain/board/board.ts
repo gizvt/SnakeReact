@@ -1,4 +1,5 @@
 import { Direction } from "../direction";
+import { GameMode } from "../game-modes";
 import { Pellet } from "../pellet";
 import { Point } from "../point";
 import { ClassicSnake } from "../snake/classic-snake";
@@ -6,10 +7,14 @@ import { PortalSnake } from "../snake/portal-snake";
 import { Snake } from "../snake/snake";
 import { WrapSnake } from "../snake/wrap-snake";
 
-export abstract class Board {
+export class Board {
     public snake: Snake | null = null;
+    public pellets: Pellet[] | null = null;
 
-    constructor(public readonly size: number) {}
+    constructor(
+        public readonly size: number,
+        public numberOfPellets: number = 1
+    ) {}
 
     get isInIllegalState() {
         return (
@@ -19,9 +24,37 @@ export abstract class Board {
         );
     }
 
-    public abstract moveSnake(direction: Direction): void;
+    public moveSnake(direction: Direction) {
+        this.snake?.move(direction, this.pellets!, this.size);
 
-    spawnSnake(wrapEnabled: boolean) {
+        if (this.snake?.pelletEaten) {
+            this.spawnPellets(this.numberOfPellets);
+        }
+    }
+
+    public spawnPellets(number: number) {
+        if (!this.snake) {
+            throw new Error(
+                "Cannot spawn a Pellet without first spawning a Snake."
+            );
+        }
+
+        const alreadySpawned = (point: Point) =>
+            pellets.some((pellet) => pellet.point.equals(point));
+
+        let pellets: Pellet[] = [];
+        for (let i = 0; i < number; i++) {
+            let point: Point;
+            do {
+                point = this.getEmptyPoint();
+            } while (alreadySpawned(point));
+            pellets.push(new Pellet(point));
+        }
+
+        this.pellets = pellets;
+    }
+
+    public spawnSnake(gameMode: GameMode) {
         let centrePoint = Point.inCentreOf(this.size);
 
         const points = [
@@ -30,21 +63,27 @@ export abstract class Board {
             centrePoint.move(Direction.Right),
         ];
 
-        this.snake = new PortalSnake(points);
-
-        // switch (wrapEnabled) {
-        //     case true:
-        //         this.snake = new WrapSnake(points);
-        //         break;
-        //     case false:
-        //         this.snake = new ClassicSnake(points);
-        //         break;
-        //     default:
-        //         this.snake = new PortalSnake(points);
-        // }
+        switch (gameMode) {
+            case "classic":
+                this.snake = new ClassicSnake(points);
+                break;
+            case "wrap":
+                this.snake = new WrapSnake(points);
+                break;
+            case "portal":
+                this.snake = new PortalSnake(points);
+                break;
+            default:
+                throw new Error("Unrecognised game mode.");
+        }
     }
 
-    protected getEmptyPoint() {
+    public reset() {
+        this.pellets = null;
+        this.snake = null;
+    }
+
+    private getEmptyPoint() {
         let point: Point;
         do {
             point = Point.random(this.size);
@@ -53,7 +92,7 @@ export abstract class Board {
         return point;
     }
 
-    protected containsPoint(point: Point) {
+    private containsPoint(point: Point) {
         return !point.isOutOfBounds(this.size);
     }
 

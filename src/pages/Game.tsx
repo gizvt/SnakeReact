@@ -21,8 +21,8 @@ import {
     isNewHighScore,
     addHighScore,
     getPlayerName,
+    gameSettings,
 } from "../modules";
-import { MultiPelletBoard } from "../modules/domain/board/multi-pellet-board";
 import inputHandler from "../modules/services/input-handler";
 
 // TODO: check that not all of the components are rerendering on every game
@@ -41,15 +41,16 @@ interface State {
 }
 
 export class Game extends Component<{}, State> {
-    private board: MultiPelletBoard;
+    private board: Board;
     private readonly audioPlayer: AudioPlayer;
     private settings: Settings = defaultSettings;
     private readonly emptyCells: Cells;
     private boardSize = 15;
+    private gameSettings = gameSettings["classic"];
 
     constructor(props: {}) {
         super(props);
-        this.board = new MultiPelletBoard(15);
+        this.board = new Board(15);
         this.audioPlayer = new AudioPlayer();
         const cells = this.createCells();
 
@@ -72,8 +73,10 @@ export class Game extends Component<{}, State> {
     componentDidMount() {
         getSettings().then((settings) => {
             this.settings = settings;
+            this.gameSettings = gameSettings[settings.gameMode];
             this.audioPlayer.isEnabled = this.settings.audioEnabled;
             this.audioPlayer.init();
+            this.board.numberOfPellets = this.gameSettings.numberOfPellets;
         });
 
         document.addEventListener("keydown", (keyboardEvent) => {
@@ -133,8 +136,8 @@ export class Game extends Component<{}, State> {
     }
 
     private async handleStartGame() {
-        this.board.spawnSnake(this.settings.wrapEnabled);
-        this.board.spawnPellets(2);
+        this.board.spawnSnake(this.settings.gameMode);
+        this.board.spawnPellets(this.gameSettings.numberOfPellets);
         const cells = this.getNewBoardState();
 
         // startGameLoop is passed as a callback so as to guarantee that status
@@ -149,7 +152,7 @@ export class Game extends Component<{}, State> {
 
     private async startGameLoop() {
         do {
-            await sleep(90);
+            await sleep(this.gameSettings.speed);
 
             if (this.state.status === "Paused") {
                 continue;
