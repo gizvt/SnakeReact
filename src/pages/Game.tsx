@@ -148,16 +148,27 @@ export class Game extends Component<{}, State> {
 
     private async startGameLoop() {
         do {
-            await sleep(80);
+            await sleep(85);
 
-            if (this.state.status === "InProgress") {
-                this.board.moveSnake(inputHandler.nextDirection);
+            if (this.state.status === "Paused") {
+                continue;
+            }
+
+            this.board.moveSnake(inputHandler.nextDirection);
+
+            if (!this.board.isInIllegalState) {
+                // Don't update the board if it's in an illegal state, otherwise
+                // it will render weirdly.
                 this.setState({
                     cells: this.getNewBoardState(),
                     score: this.board.snake!.pelletsEaten,
                 });
+
+                continue;
             }
-        } while (!this.board.isInIllegalState);
+
+            break;
+        } while (true);
 
         document.dispatchEvent(
             new CustomEvent("PlayAudio", { detail: Sound.GameOver })
