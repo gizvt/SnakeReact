@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Row, Stack, Table } from "react-bootstrap";
+import { Button, Col, Row, Stack, Tab, Table, Tabs } from "react-bootstrap";
+import { HighScoresTable } from "../components/HighScores/HighScoresTable";
 import { getHighScores, HighScore } from "../modules";
 
 export function HighScores() {
-    const [highScores, setHighScores] = useState<HighScore[]>([]);
+    const [wrapHighScores, setWrapHighScores] = useState<HighScore[]>([]);
+    const [noWrapHighScores, setNoWrapHighScores] = useState<HighScore[]>([]);
 
     useEffect(() => {
         async function fetchHighScores() {
-            const highScores = await getHighScores();
-            setHighScores(highScores);
+            const wrapHighScores = await getHighScores(true);
+            const noWrapHighScores = await getHighScores(false);
+            setWrapHighScores(wrapHighScores);
+            setNoWrapHighScores(noWrapHighScores);
         }
 
         fetchHighScores();
@@ -28,37 +32,19 @@ export function HighScores() {
                     </Button>
                     <h1 className="display-5 me-auto">High Scores</h1>
                 </Stack>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>#</th>
-                            <th>Player Name</th>
-                            <th>Score</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {highScores.sort(strongestFirst).map((hs, index) => (
-                            <tr>
-                                <td className="text-center">
-                                    {getMedal(index)}
-                                </td>
-                                <td>{index + 1}</td>
-                                <td>{hs.playerName}</td>
-                                <td>{hs.score}</td>
-                                <td>{hs.date}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <Tabs
+                    defaultActiveKey="noWrap"
+                    className="mb-4"
+                    transition={true}
+                >
+                    <Tab eventKey="noWrap" title="Classic: No Wrap">
+                        <HighScoresTable highScores={noWrapHighScores} />
+                    </Tab>
+                    <Tab eventKey="wrap" title="Classic: Wrap">
+                        <HighScoresTable highScores={wrapHighScores} />
+                    </Tab>
+                </Tabs>
             </Col>
         </Row>
     );
 }
-
-const getMedal = (index: number) =>
-    index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : null;
-
-const strongestFirst = (a: HighScore, b: HighScore) =>
-    b.score > a.score || (b.score === a.score && b.date < a.date) ? 1 : -1;

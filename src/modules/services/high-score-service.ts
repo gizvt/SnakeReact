@@ -1,15 +1,17 @@
-const key = "highScores";
+const wrapKey = "highScores_wrap";
+const noWrapKey = "highScores_noWrap";
 const maxHighScores = 10;
 
 export interface HighScore {
     id: string;
     playerName: string;
     score: number;
+    wrap: boolean;
     date: string;
 }
 
-export async function getHighScores() {
-    const highScores = localStorage.getItem(key);
+export async function getHighScores(wrap: boolean) {
+    const highScores = localStorage.getItem(getKey(wrap));
 
     if (highScores) {
         return JSON.parse(highScores) as HighScore[];
@@ -18,12 +20,16 @@ export async function getHighScores() {
     return [];
 }
 
-export async function addHighScore(playerName: string, score: number) {
-    if (!(await isNewHighScore(score))) {
+export async function addHighScore(
+    playerName: string,
+    score: number,
+    wrap: boolean
+) {
+    if (!(await isNewHighScore(score, wrap))) {
         throw new Error("Score is not a new high score.");
     }
 
-    let highScores = await getHighScores();
+    let highScores = await getHighScores(wrap);
 
     if (highScores.length >= maxHighScores) {
         deleteWeakestHighScore(highScores);
@@ -34,14 +40,15 @@ export async function addHighScore(playerName: string, score: number) {
         date: new Date(Date.now()).toISOString(),
         playerName: playerName,
         score: score,
+        wrap: wrap,
     };
 
     highScores.push(highScore);
-    localStorage.setItem(key, JSON.stringify(highScores));
+    localStorage.setItem(getKey(wrap), JSON.stringify(highScores));
 }
 
-export async function isNewHighScore(score: number) {
-    const highScores = await getHighScores();
+export async function isNewHighScore(score: number, wrap: boolean) {
+    const highScores = await getHighScores(wrap);
 
     if (highScores.length < maxHighScores) {
         return true;
@@ -74,3 +81,5 @@ function weakestHighScoreReducer(prev: HighScore, current: HighScore) {
 
     return prev;
 }
+
+const getKey = (wrap: boolean) => (wrap ? wrapKey : noWrapKey);

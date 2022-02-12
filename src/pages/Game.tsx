@@ -196,10 +196,11 @@ export class Game extends Component<{}, State> {
     private async handleGameOver() {
         const score = this.board.snake!.pelletsEaten;
         const playerName = await getPlayerName();
+        const wrap = this.settings.wrapEnabled;
         this.board.reset();
 
-        if (playerName && (await isNewHighScore(score))) {
-            await addHighScore(playerName, score);
+        if (playerName && (await isNewHighScore(score, wrap))) {
+            await addHighScore(playerName, score, wrap);
             this.setState({ showHighScoreToast: true });
         }
 
