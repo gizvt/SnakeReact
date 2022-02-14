@@ -21,7 +21,7 @@ import {
     isNewHighScore,
     addHighScore,
     getPlayerName,
-    gameSettings,
+    gameModeConfig,
 } from "../modules";
 import inputHandler from "../modules/services/input-handler";
 
@@ -46,7 +46,7 @@ export class Game extends Component<{}, State> {
     private settings: Settings = defaultSettings;
     private readonly emptyCells: Cells;
     private boardSize = 15;
-    private gameSettings = gameSettings["classic"];
+    private gameSettings = gameModeConfig["classic"];
 
     constructor(props: {}) {
         super(props);
@@ -73,7 +73,7 @@ export class Game extends Component<{}, State> {
     componentDidMount() {
         getSettings().then((settings) => {
             this.settings = settings;
-            this.gameSettings = gameSettings[settings.gameMode];
+            this.gameSettings = gameModeConfig[settings.gameMode];
             this.audioPlayer.isEnabled = this.settings.audioEnabled;
             this.audioPlayer.init();
             this.board.numberOfPellets = this.gameSettings.numberOfPellets;

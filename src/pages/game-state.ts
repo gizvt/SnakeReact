@@ -5,7 +5,7 @@ import {
     Board,
     defaultSettings,
     Direction,
-    gameSettings,
+    gameModeConfig,
     getPlayerName,
     getSettings,
     isNewHighScore,
@@ -17,8 +17,6 @@ type Status = "Idle" | "InProgress" | "Paused" | "GameOver";
 
 export function useGameState() {
     const boardSize = 15;
-    let settings = defaultSettings;
-    let chosenGameSettings = gameSettings["classic"];
 
     const [status, setStatus] = useState<Status>("Idle");
     const [showHighScoreToast, setShowHighScoreToast] = useState(false);
@@ -28,15 +26,17 @@ export function useGameState() {
 
     const board = useRef(new Board(boardSize));
     const audioPlayer = useRef(new AudioPlayer());
+    const settings = useRef(defaultSettings);
+    const config = useRef(gameModeConfig["classic"]);
 
     useEffect(() => {
         async function applySettings() {
             const userSettings = await getSettings();
-            settings = userSettings;
-            chosenGameSettings = gameSettings[settings.gameMode];
-            audioPlayer.current.isEnabled = settings.audioEnabled;
+            settings.current = userSettings;
+            config.current = gameModeConfig[userSettings.gameMode];
+            audioPlayer.current.isEnabled = userSettings.audioEnabled;
             audioPlayer.current.init();
-            board.current.numberOfPellets = chosenGameSettings.numberOfPellets;
+            board.current.numberOfPellets = config.current.numberOfPellets;
         }
 
         applySettings();
@@ -96,7 +96,7 @@ export function useGameState() {
         };
 
         if (status === "InProgress") {
-            const timerId = setTimeout(() => gameLoop(), 85);
+            const timerId = setTimeout(() => gameLoop(), config.current.speed);
             return () => {
                 clearTimeout(timerId);
             };
@@ -108,8 +108,8 @@ export function useGameState() {
             return;
         }
 
-        board.current.spawnSnake(settings.gameMode);
-        board.current.spawnPellets(chosenGameSettings.numberOfPellets);
+        board.current.spawnSnake(settings.current.gameMode);
+        board.current.spawnPellets(config.current.numberOfPellets);
         const newBoardState = getNewBoardState();
         setSnakeCoords(newBoardState.snakeCoords);
         setPelletCoords(newBoardState.pelletCoords);
@@ -123,7 +123,7 @@ export function useGameState() {
 
         const score = board.current.snake!.pelletsEaten;
         const playerName = await getPlayerName();
-        const wrap = settings.wrapEnabled;
+        const wrap = settings.current.wrapEnabled;
         board.current.reset();
 
         if (playerName && (await isNewHighScore(score, wrap))) {

@@ -1,10 +1,10 @@
 export type GameMode = "classic" | "wrap" | "portal";
-export interface GameConfig {
+export interface Config {
     numberOfPellets: number;
     speed: number;
 }
 
-export const gameSettings: Record<GameMode, GameConfig> = {
+export const gameModeConfig: Record<GameMode, Config> = {
     classic: { numberOfPellets: 1, speed: 85 },
     wrap: { numberOfPellets: 1, speed: 85 },
     portal: { numberOfPellets: 2, speed: 100 },
