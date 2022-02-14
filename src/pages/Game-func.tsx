@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import {
     Board as BoardComponent,
     BottomBar,
@@ -16,7 +16,6 @@ import {
     Sound,
     getSettings,
     defaultSettings,
-    sleep,
     isNewHighScore,
     addHighScore,
     getPlayerName,
@@ -43,39 +42,22 @@ export function GameFunc() {
     const [showHighScoreToast, setShowHighScoreToast] = useState(false);
     const [score, setScore] = useState(0);
     const [cells, setCells] = useState(emptyCells);
-    const startGame = useRef(false);
-
-    const handleStartGame = async () => {
-        board.spawnSnake(settings.gameMode);
-        board.spawnPellets(chosenGameSettings.numberOfPellets);
-        const cells = getNewBoardState();
-        setCells(cells);
-        setStatus("InProgress");
-        startGame.current = true;
-    };
 
     useEffect(() => {
-        console.log(status);
-        const startGameLoop = async () => {
-            do {
-                await sleep(chosenGameSettings.speed);
+        const gameLoop = () => {
+            if (status === "Paused") {
+                return;
+            }
 
-                if (status === "Paused") {
-                    continue;
-                }
+            board.moveSnake(inputHandler.nextDirection);
 
-                board.moveSnake(inputHandler.nextDirection);
-
-                if (!board.isInIllegalState) {
-                    // Don't update the board if it's in an illegal state, otherwise
-                    // it will render weirdly.
-                    setCells(getNewBoardState());
-                    setScore(board.snake!.pelletsEaten);
-                    continue;
-                }
-
-                break;
-            } while (true);
+            if (!board.isInIllegalState) {
+                // Don't update the board if it's in an illegal state, otherwise
+                // it will render weirdly.
+                setCells(getNewBoardState());
+                setScore(board.snake!.pelletsEaten);
+                return;
+            }
 
             document.dispatchEvent(
                 new CustomEvent("PlayAudio", { detail: Sound.GameOver })
@@ -85,11 +67,13 @@ export function GameFunc() {
             setShowGameOverModal(true);
         };
 
-        if (startGame.current) {
-            startGame.current = false;
-            startGameLoop();
+        if (status === "InProgress") {
+            const timerId = setTimeout(() => gameLoop(), 85);
+            return () => {
+                clearTimeout(timerId);
+            };
         }
-    }, [startGame, status]);
+    });
 
     useEffect(() => {
         async function applySettings() {
@@ -128,6 +112,14 @@ export function GameFunc() {
 
         // TODO: cleanup and remove event listener?
     }, [status]);
+
+    const handleStartGame = async () => {
+        board.spawnSnake(settings.gameMode);
+        board.spawnPellets(chosenGameSettings.numberOfPellets);
+        const cells = getNewBoardState();
+        setCells(cells);
+        setStatus("InProgress");
+    };
 
     const handleGameOver = async () => {
         const score = board.snake!.pelletsEaten;
