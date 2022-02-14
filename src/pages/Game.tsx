@@ -120,9 +120,9 @@ export class Game extends Component<{}, State> {
                     score={this.state.score}
                     spinLogo={this.state.status === "InProgress"}
                 />
-                <BoardComponent size={this.boardSize}>
+                {/* <BoardComponent size={this.boardSize}>
                     {Object.values(this.state.cells)}
-                </BoardComponent>
+                </BoardComponent> */}
                 <BottomBar
                     handleStartGame={this.handleStartGame}
                     disableStartButton={this.state.status !== "Idle"}
