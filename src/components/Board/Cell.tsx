@@ -7,7 +7,7 @@ export interface Props {
 }
 
 export const Cell = React.memo(function Cell(props: Props) {
-    console.log(`Rendering a cell of type ${props.type}`);
+    // console.log(`Rendering a cell of type ${props.type}`);
     switch (props.type) {
         case "Empty":
             return <div className="cell"></div>;
