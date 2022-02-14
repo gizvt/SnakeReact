@@ -113,7 +113,7 @@ export class Game extends Component<{}, State> {
                 <HighScoreToast
                     show={this.state.showHighScoreToast}
                     score={this.state.score}
-                    handleClose={this.handleHighScoreToastClose}
+                    // handleClose={this.handleHighScoreToastClose}
                 />
                 <TopBar
                     showTimer={this.state.status === "InProgress"}
