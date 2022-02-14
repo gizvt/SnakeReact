@@ -89,8 +89,7 @@ export function GameFunc() {
     }, []);
 
     useEffect(() => {
-        console.log("adding listener");
-        document.addEventListener("keydown", (keyboardEvent) => {
+        const handleKeyDown = (keyboardEvent: KeyboardEvent) => {
             if (status === "Idle") {
                 return;
             }
@@ -108,9 +107,13 @@ export function GameFunc() {
                     board.snake?.direction || Direction.None
                 );
             }
-        });
+        };
 
-        // TODO: cleanup and remove event listener?
+        document.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
     }, [status]);
 
     const handleStartGame = async () => {
