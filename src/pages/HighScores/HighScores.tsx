@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Row, Stack, Tab, Table, Tabs } from "react-bootstrap";
-import { HighScoresTable } from "../components/HighScores/HighScoresTable";
-import { getHighScores, HighScore } from "../modules";
+import { Button, Col, Row, Stack, Tab, Tabs } from "react-bootstrap";
+import { getHighScores, HighScore } from "../../modules";
+import { HighScoresTable } from "./HighScoresTable";
 
 export function HighScores() {
     const [wrapHighScores, setWrapHighScores] = useState<HighScore[]>([]);

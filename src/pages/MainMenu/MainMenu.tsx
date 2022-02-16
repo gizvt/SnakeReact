@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Col, Row, Stack } from "react-bootstrap";
-import { SettingsSideBar, Title } from "../components";
+import { Title } from "../../components";
+import { SettingsSideBar } from "./SettingsSideBar";
 
 export function MainMenu() {
     const [showSettings, setShowSettings] = useState(false);

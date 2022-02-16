@@ -1,6 +1,11 @@
-import { useRef, useState } from "react";
-import { ReactElement, useEffect } from "react";
-import { FunctionComponent, Profiler } from "react";
+import {
+    FunctionComponent,
+    Profiler,
+    ReactElement,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { Col, Row } from "react-bootstrap";
 import { Cell, CellType } from "..";
 import { Point } from "../../modules";

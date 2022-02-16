@@ -1,9 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Game from "./pages/Game";
-import { GameFunc } from "./pages/Game-func";
-import { HighScores } from "./pages/HighScores";
-import { MainMenu } from "./pages/MainMenu";
+import { GameFunc } from "./pages/Game/Game";
+import { HighScores } from "./pages/HighScores/HighScores";
+import { MainMenu } from "./pages/MainMenu/MainMenu";
 
 export const App = React.memo(function () {
     // console.log("Rendering App");

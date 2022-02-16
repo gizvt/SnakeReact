@@ -1,11 +1,10 @@
+import { BottomBar, TopBar } from ".";
 import {
     Board as BoardComponent,
-    BottomBar,
     GameOverModal,
     HighScoreToast,
-    TopBar,
-} from "../components";
-import { useGameState } from "./game-state";
+} from "../../components";
+import { useGameState } from "../../hooks/game-state";
 
 export function GameFunc() {
     const {

@@ -70,8 +70,13 @@ export function useGameState() {
         };
     }, [status]);
 
+    // Uses setInterval to run the gameLoop every x seconds. If the status
+    // changes to "Paused", I think the cleanup will remove the setInterval from
+    // the previous run, and then retrn early, thus not setting up another set
+    // interval and pausing the game.
     useEffect(() => {
         const gameLoop = () => {
+            console.log("loop");
             if (status === "Paused") {
                 return;
             }
@@ -96,12 +101,12 @@ export function useGameState() {
         };
 
         if (status === "InProgress") {
-            const timerId = setTimeout(() => gameLoop(), config.current.speed);
+            const timerId = setInterval(() => gameLoop(), config.current.speed);
             return () => {
-                clearTimeout(timerId);
+                clearInterval(timerId);
             };
         }
-    });
+    }, [status]);
 
     const startGame = async () => {
         if (status !== "Idle") {

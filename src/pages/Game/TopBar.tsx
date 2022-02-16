@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row, Stack } from "react-bootstrap";
-import { PlayerName, Timer, Score, Title } from "..";
+import { PlayerName, Score, Timer, Title } from "../../components";
 
 interface Props {
     score?: number;
