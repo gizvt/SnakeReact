@@ -1,12 +1,13 @@
-import { BottomBar, TopBar } from ".";
 import {
     Board as BoardComponent,
     GameOverModal,
     HighScoreToast,
 } from "../../components";
 import { useGameState } from "../../hooks/game-state";
+import { BottomBar } from "./BottomBar";
+import { TopBar } from "./TopBar";
 
-export function GameFunc() {
+export function Game() {
     const {
         snakeCoords,
         pelletCoords,
