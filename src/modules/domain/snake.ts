@@ -1,8 +1,8 @@
-import { Direction } from "../direction";
-import { Pellet } from "../pellet";
-import { Point } from "../point";
+import { Sound } from "..";
+import { Direction } from "./direction";
+import { Point } from "./point";
 
-export abstract class Snake {
+export class Snake {
     protected _direction: Direction = Direction.Left;
     protected readonly _points: Point[];
     protected _pelletsEaten = 0;
@@ -49,26 +49,28 @@ export abstract class Snake {
         return this._points.filter((p) => p.equals(this.peekHead())).length > 1;
     }
 
-    public abstract move(
-        direction: Direction,
-        pellets: Pellet[],
-        boardSize: number
-    ): void;
-
-    protected spawnNewHead(newHead: Point) {
+    public spawnNewHead(newHead: Point) {
         this._points.unshift(newHead);
     }
 
-    protected popTail() {
+    public popTail() {
         return this._points.pop();
     }
 
-    protected changeDirection(newDirection: Direction) {
+    public changeDirection(newDirection: Direction) {
         if (
             newDirection !== Direction.None &&
             !this.direction.isOppositeTo(newDirection)
         ) {
             this.direction = newDirection;
         }
+    }
+
+    public eatPellet() {
+        document.dispatchEvent(
+            new CustomEvent("PlayAudio", { detail: Sound.PelletEaten })
+        );
+
+        this._pelletsEaten++;
     }
 }

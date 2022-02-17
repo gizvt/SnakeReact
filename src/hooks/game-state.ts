@@ -27,7 +27,7 @@ export function useGameState() {
     const board = useRef(new Board(boardSize));
     const audioPlayer = useRef(new AudioPlayer());
     const settings = useRef(defaultSettings);
-    const config = useRef(gameModeConfig["classic"]);
+    const config = useRef(gameModeConfig.none);
 
     useEffect(() => {
         async function applySettings() {
@@ -36,7 +36,7 @@ export function useGameState() {
             config.current = gameModeConfig[userSettings.gameMode];
             audioPlayer.current.isEnabled = userSettings.audioEnabled;
             audioPlayer.current.init();
-            board.current.numberOfPellets = config.current.numberOfPellets;
+            board.current.gameMode = userSettings.gameMode;
         }
 
         applySettings();
@@ -113,7 +113,7 @@ export function useGameState() {
             return;
         }
 
-        board.current.spawnSnake(settings.current.gameMode);
+        board.current.spawnSnake();
         board.current.spawnPellets(config.current.numberOfPellets);
         const newBoardState = getNewBoardState();
         setSnakeCoords(newBoardState.snakeCoords);
