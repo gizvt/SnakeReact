@@ -26,40 +26,43 @@ export class Board {
     public moveSnake(direction: Direction) {
         this.snake.changeDirection(direction);
         let newHeadPoint = this.getNewHeadPoint();
+        this.snake.spawnNewHead(newHeadPoint);
 
         const pelletEaten = this.pellets.some((p) =>
             p.point.equals(newHeadPoint)
         );
 
         if (pelletEaten) {
+            if (this.gameMode === "portal") {
+                const [first, second] = this.pellets;
+
+                newHeadPoint = newHeadPoint.equals(first.point)
+                    ? second.point
+                    : newHeadPoint.equals(second.point)
+                    ? first.point
+                    : newHeadPoint;
+
+                this.snake.spawnNewHead(newHeadPoint);
+            }
+
             this.snake.eatPellet();
             this.spawnPellets(gameModeConfig[this.gameMode].numberOfPellets);
-        } else if (!pelletEaten || this.gameMode === "portal") {
-            // Always pop the tail in Portal mode as the snake should move to
-            // occupy the pellet (if one is eaten) and the head should spawn at
-            // the other pellet in the same turn.
-            this.snake.popTail();
         }
 
-        this.snake.spawnNewHead(newHeadPoint);
+        if (!pelletEaten || this.gameMode === "portal") {
+            // Always pop the tail in Portal mode as two heads are spawned
+            // when a pellet is eaten to achieve the desired warping behaviour
+            // (one on both of the pellets).
+            this.snake.popTail();
+        }
     }
 
     private getNewHeadPoint() {
         let newHeadPoint = this.snake.peekHead().move(this.snake.direction);
 
-        if (this.gameMode === "wrap") {
+        if (this.gameMode === "wrap" || this.gameMode === "portal") {
             return newHeadPoint.isOutOfBounds(this.size)
                 ? newHeadPoint.wrap(this.snake.direction, this.size)
-                : newHeadPoint;
-        }
-
-        if (this.gameMode === "portal") {
-            const [first, second] = this.pellets;
-
-            return newHeadPoint.equals(first.point)
-                ? second.point
-                : newHeadPoint.equals(second.point)
-                ? first.point
                 : newHeadPoint;
         }
 
