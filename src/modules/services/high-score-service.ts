@@ -1,17 +1,18 @@
-const wrapKey = "highScores_wrap";
-const noWrapKey = "highScores_noWrap";
+import { GameMode } from "..";
+
 const maxHighScores = 10;
+const composeKey = (gameMode: GameMode) => `highScores_${gameMode}`;
 
 export interface HighScore {
     id: string;
     playerName: string;
     score: number;
-    wrap: boolean;
+    gameMode: GameMode;
     date: string;
 }
 
-export async function getHighScores(wrap: boolean) {
-    const highScores = localStorage.getItem(getKey(wrap));
+export async function getHighScores(gameMode: GameMode) {
+    const highScores = localStorage.getItem(composeKey(gameMode));
 
     if (highScores) {
         return JSON.parse(highScores) as HighScore[];
@@ -23,13 +24,13 @@ export async function getHighScores(wrap: boolean) {
 export async function addHighScore(
     playerName: string,
     score: number,
-    wrap: boolean
+    gameMode: GameMode
 ) {
-    if (!(await isNewHighScore(score, wrap))) {
+    if (!(await isNewHighScore(score, gameMode))) {
         throw new Error("Score is not a new high score.");
     }
 
-    let highScores = await getHighScores(wrap);
+    let highScores = await getHighScores(gameMode);
 
     if (highScores.length >= maxHighScores) {
         deleteWeakestHighScore(highScores);
@@ -40,15 +41,15 @@ export async function addHighScore(
         date: new Date(Date.now()).toISOString(),
         playerName: playerName,
         score: score,
-        wrap: wrap,
+        gameMode: gameMode,
     };
 
     highScores.push(highScore);
-    localStorage.setItem(getKey(wrap), JSON.stringify(highScores));
+    localStorage.setItem(composeKey(gameMode), JSON.stringify(highScores));
 }
 
-export async function isNewHighScore(score: number, wrap: boolean) {
-    const highScores = await getHighScores(wrap);
+export async function isNewHighScore(score: number, gameMode: GameMode) {
+    const highScores = await getHighScores(gameMode);
 
     if (highScores.length < maxHighScores) {
         return true;
@@ -81,5 +82,3 @@ function weakestHighScoreReducer(prev: HighScore, current: HighScore) {
 
     return prev;
 }
-
-const getKey = (wrap: boolean) => (wrap ? wrapKey : noWrapKey);

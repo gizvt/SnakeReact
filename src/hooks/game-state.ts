@@ -128,11 +128,11 @@ export function useGameState() {
 
         const score = board.current.snake!.pelletsEaten;
         const playerName = await getPlayerName();
-        const wrap = settings.current.wrapEnabled;
+        const gameMode = settings.current.gameMode;
         board.current.reset();
 
-        if (playerName && (await isNewHighScore(score, wrap))) {
-            await addHighScore(playerName, score, wrap);
+        if (playerName && (await isNewHighScore(score, gameMode))) {
+            await addHighScore(playerName, score, gameMode);
             setShowHighScoreToast(true);
         }
 

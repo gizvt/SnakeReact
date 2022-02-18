@@ -4,15 +4,19 @@ import { getHighScores, HighScore } from "../../modules";
 import { HighScoresTable } from "./HighScoresTable";
 
 export function HighScores() {
+    const [classicHighScores, setClassicHighScores] = useState<HighScore[]>([]);
     const [wrapHighScores, setWrapHighScores] = useState<HighScore[]>([]);
-    const [noWrapHighScores, setNoWrapHighScores] = useState<HighScore[]>([]);
+    const [portalHighScores, setPortalHighScores] = useState<HighScore[]>([]);
 
     useEffect(() => {
         async function fetchHighScores() {
-            const wrapHighScores = await getHighScores(true);
-            const noWrapHighScores = await getHighScores(false);
-            setWrapHighScores(wrapHighScores);
-            setNoWrapHighScores(noWrapHighScores);
+            const classic = await getHighScores("classic");
+            const wrap = await getHighScores("wrap");
+            const portal = await getHighScores("portal");
+
+            setClassicHighScores(classic);
+            setWrapHighScores(wrap);
+            setPortalHighScores(portal);
         }
 
         fetchHighScores();
@@ -33,15 +37,18 @@ export function HighScores() {
                     <h1 className="display-5 me-auto">High Scores</h1>
                 </Stack>
                 <Tabs
-                    defaultActiveKey="noWrap"
+                    defaultActiveKey="classic"
                     className="mb-4"
                     transition={true}
                 >
-                    <Tab eventKey="noWrap" title="Classic: No Wrap">
-                        <HighScoresTable highScores={noWrapHighScores} />
+                    <Tab eventKey={"classic"} title="Classic">
+                        <HighScoresTable highScores={classicHighScores} />
                     </Tab>
-                    <Tab eventKey="wrap" title="Classic: Wrap">
+                    <Tab eventKey="wrap" title="Wrap">
                         <HighScoresTable highScores={wrapHighScores} />
+                    </Tab>
+                    <Tab eventKey="portal" title="Portal">
+                        <HighScoresTable highScores={portalHighScores} />
                     </Tab>
                 </Tabs>
             </Col>
