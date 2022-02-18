@@ -4,14 +4,11 @@ export enum Sound {
 }
 
 export class AudioPlayer {
-    audio: HTMLAudioElement = new Audio();
-
     constructor(public isEnabled: boolean = false) {}
 
     play(sound: Sound) {
         if (this.isEnabled) {
-            this.audio.src = sound;
-            this.audio.play();
+            new Audio(sound).play();
         }
     }
 
