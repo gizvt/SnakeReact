@@ -29,7 +29,7 @@ export function Game() {
                 score={score}
                 handleClose={handleGameOver}
             />
-            <HighScoreToast show={showHighScoreToast} score={score} />
+            {showHighScoreToast && <HighScoreToast score={score} />}
             <TopBar
                 showTimer={status === "InProgress"}
                 score={score}
