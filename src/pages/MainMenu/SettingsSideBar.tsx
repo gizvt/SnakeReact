@@ -87,31 +87,13 @@ export function SettingsSideBar(props: Props) {
                                                     .value as GameMode,
                                             })
                                         }
+                                        defaultValue={settings.gameMode}
                                     >
-                                        <option
-                                            selected={
-                                                settings.gameMode === "classic"
-                                            }
-                                            value={"classic"}
-                                        >
+                                        <option value={"classic"}>
                                             Classic
                                         </option>
-                                        <option
-                                            selected={
-                                                settings.gameMode === "wrap"
-                                            }
-                                            value={"wrap"}
-                                        >
-                                            Wrap
-                                        </option>
-                                        <option
-                                            selected={
-                                                settings.gameMode === "portal"
-                                            }
-                                            value={"portal"}
-                                        >
-                                            Portal
-                                        </option>
+                                        <option value={"wrap"}>Wrap</option>
+                                        <option value={"portal"}>Portal</option>
                                     </Form.Select>
                                 </Form.Group>
                                 <Form.Group>
