@@ -39,6 +39,9 @@ export class Board {
                     : newHeadPoint;
 
                 this.snake.spawnNewHead(newHeadPoint);
+            } else if (this.gameMode === "rebound") {
+                this.snake.swapDirection();
+                this.snake.points.reverse();
             }
 
             this.snake.eatPellet();

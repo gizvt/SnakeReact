@@ -23,10 +23,22 @@ export class Direction {
         return this.isOppositeTo(other) || this.isEqualTo(other);
     }
 
+    getOpposite() {
+        if (this.id - 20 <= 0) {
+            return Direction.fromId(this.id + 20);
+        }
+
+        return Direction.fromId(this.id - 20);
+    }
+
     static fromKey(key: string) {
         return (
             this.AllDirections.find((d) => d.keys.some((k) => k === key)) ||
             Direction.None
         );
+    }
+
+    static fromId(id: number) {
+        return this.AllDirections.find((d) => d.id === id) || Direction.None;
     }
 }

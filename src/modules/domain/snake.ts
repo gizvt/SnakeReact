@@ -20,14 +20,14 @@ export class Snake {
         return this._direction;
     }
 
-    public set direction(newDirection: Direction) {
-        if (
-            newDirection !== Direction.None &&
-            !this._direction.isOppositeTo(newDirection)
-        ) {
-            this._direction = newDirection;
-        }
-    }
+    // public set direction(newDirection: Direction) {
+    //     if (
+    //         newDirection !== Direction.None &&
+    //         !this._direction.isOppositeTo(newDirection)
+    //     ) {
+    //         this._direction = newDirection;
+    //     }
+    // }
 
     public get pelletsEaten() {
         return this._pelletsEaten;
@@ -42,7 +42,7 @@ export class Snake {
     }
 
     public containsPoint(other: Point) {
-        return this._points.find((point) => point.equals(other));
+        return this._points.some((point) => point.equals(other));
     }
 
     public hasCollidedWithSelf() {
@@ -60,9 +60,24 @@ export class Snake {
     public changeDirection(newDirection: Direction) {
         if (
             newDirection !== Direction.None &&
-            !this.direction.isOppositeTo(newDirection)
+            !this._direction.isOppositeTo(newDirection)
         ) {
-            this.direction = newDirection;
+            this._direction = newDirection;
+        }
+    }
+
+    public swapDirection() {
+        this._direction = this.direction.getOpposite();
+        const tail = this.peekTail();
+
+        if (this.containsPoint(tail.move(Direction.Right))) {
+            this._direction = Direction.Left;
+        } else if (this.containsPoint(tail.move(Direction.Left))) {
+            this._direction = Direction.Right;
+        } else if (this.containsPoint(tail.move(Direction.Up))) {
+            this._direction = Direction.Down;
+        } else {
+            this._direction = Direction.Up;
         }
     }
 
@@ -72,5 +87,9 @@ export class Snake {
         );
 
         this._pelletsEaten++;
+    }
+
+    private peekTail() {
+        return this._points[this._points.length - 1];
     }
 }

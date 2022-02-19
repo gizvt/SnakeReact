@@ -25,8 +25,6 @@ export function SettingsSideBar(props: Props) {
     const [playerName, setPlayerName] = useState("");
     const [settings, setSettings] = useState(defaultSettings);
 
-    const chosenGameMode = () => settings.gameMode;
-
     const onHide = async () => {
         await saveSettings(settings);
         await savePlayerName(playerName);
@@ -94,6 +92,9 @@ export function SettingsSideBar(props: Props) {
                                         </option>
                                         <option value={"wrap"}>Wrap</option>
                                         <option value={"portal"}>Portal</option>
+                                        <option value={"rebound"}>
+                                            Rebound
+                                        </option>
                                     </Form.Select>
                                 </Form.Group>
                                 <Form.Group>
