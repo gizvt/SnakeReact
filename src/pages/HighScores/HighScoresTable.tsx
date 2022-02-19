@@ -19,7 +19,7 @@ export function HighScoresTable(props: Props) {
             </thead>
             <tbody>
                 {props.highScores.sort(strongestFirst).map((hs, index) => (
-                    <tr>
+                    <tr key={hs.date}>
                         <td className="text-center">{getMedal(index)}</td>
                         <td>{index + 1}</td>
                         <td>{hs.playerName}</td>
