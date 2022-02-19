@@ -1,6 +1,5 @@
-import { gameModeConfig } from "..";
 import { Direction } from "./direction";
-import { GameMode } from "./game-modes";
+import { GameMode, gameModeConfig } from "./game-modes";
 import { Pellet } from "./pellet";
 import { Point } from "./point";
 import { Snake } from "./snake";
@@ -44,7 +43,7 @@ export class Board {
                 this.snake.points.reverse();
             }
 
-            this.snake.eatPellet();
+            this.snake.eatPellet(this.gameMode);
             this.spawnPellets(gameModeConfig[this.gameMode].numberOfPellets);
         }
 

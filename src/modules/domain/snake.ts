@@ -1,5 +1,6 @@
-import { Sound } from "..";
+import { pelletEatenSounds, Sound } from "..";
 import { Direction } from "./direction";
+import { GameMode } from "./game-modes";
 import { Point } from "./point";
 
 export class Snake {
@@ -19,15 +20,6 @@ export class Snake {
     public get direction() {
         return this._direction;
     }
-
-    // public set direction(newDirection: Direction) {
-    //     if (
-    //         newDirection !== Direction.None &&
-    //         !this._direction.isOppositeTo(newDirection)
-    //     ) {
-    //         this._direction = newDirection;
-    //     }
-    // }
 
     public get pelletsEaten() {
         return this._pelletsEaten;
@@ -81,9 +73,11 @@ export class Snake {
         }
     }
 
-    public eatPellet() {
+    public eatPellet(gameMode: GameMode) {
         document.dispatchEvent(
-            new CustomEvent("PlayAudio", { detail: Sound.PelletEaten })
+            new CustomEvent("PlayAudio", {
+                detail: pelletEatenSounds[gameMode] || Sound.PelletEaten,
+            })
         );
 
         this._pelletsEaten++;
