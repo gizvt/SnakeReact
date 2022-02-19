@@ -3,8 +3,8 @@ import {
     addHighScore,
     AudioPlayer,
     Board,
-    defaultSettings,
     Direction,
+    GameMode,
     gameModeConfig,
     getPlayerName,
     getSettings,
@@ -15,31 +15,26 @@ import inputHandler from "../modules/services/input-handler";
 
 type Status = "Idle" | "InProgress" | "Paused" | "GameOver";
 
-export function useGameState() {
-    const boardSize = 15;
-
+export function useGameState(gameMode: GameMode) {
     const [status, setStatus] = useState<Status>("Idle");
-    const [showHighScoreToast, setShowHighScoreToast] = useState(false);
     const [score, setScore] = useState(0);
     const [pelletCoords, setPelletCoords] = useState<string[]>([]);
     const [snakeCoords, setSnakeCoords] = useState<string[]>([]);
+    const [showHighScoreToast, setShowHighScoreToast] = useState(false);
 
-    const board = useRef(new Board(boardSize));
+    const boardSize = 15;
+    const board = useRef(new Board(boardSize, gameMode));
     const audioPlayer = useRef(new AudioPlayer());
-    const settings = useRef(defaultSettings);
-    const config = useRef(gameModeConfig.none);
+    const config = useRef(gameModeConfig[gameMode]);
 
     useEffect(() => {
-        async function applySettings() {
+        async function applyUserSettings() {
             const userSettings = await getSettings();
-            settings.current = userSettings;
-            config.current = gameModeConfig[userSettings.gameMode];
             audioPlayer.current.isEnabled = userSettings.audioEnabled;
             audioPlayer.current.init();
-            board.current.gameMode = userSettings.gameMode;
         }
 
-        applySettings();
+        applyUserSettings();
     }, []);
 
     useEffect(() => {
@@ -58,7 +53,7 @@ export function useGameState() {
                 // Only listen to inputs if the game is in progress.
                 inputHandler.setNextDirection(
                     Direction.fromKey(keyboardEvent.key),
-                    board.current.snake?.direction || Direction.None
+                    board.current.snake.direction || Direction.None
                 );
             }
         };
@@ -76,7 +71,6 @@ export function useGameState() {
     // interval and pausing the game.
     useEffect(() => {
         const gameLoop = () => {
-            console.log("loop");
             if (status === "Paused") {
                 return;
             }
@@ -128,7 +122,6 @@ export function useGameState() {
 
         const score = board.current.snake!.pelletsEaten;
         const playerName = await getPlayerName();
-        const gameMode = settings.current.gameMode;
         board.current.reset();
 
         if (playerName && (await isNewHighScore(score, gameMode))) {

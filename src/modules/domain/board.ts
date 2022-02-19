@@ -9,11 +9,7 @@ export class Board {
     public snake: Snake = new Snake([]);
     public pellets: Pellet[] = [];
 
-    constructor(
-        public readonly size: number,
-        public numberOfPellets: number = 1,
-        public gameMode: GameMode = "none"
-    ) {}
+    constructor(public readonly size: number, private gameMode: GameMode) {}
 
     get isInIllegalState() {
         return (

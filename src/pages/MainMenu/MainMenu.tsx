@@ -1,13 +1,21 @@
 import { useState } from "react";
 import { Button, Col, Row, Stack } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { Title } from "../../components";
+import { getSettings } from "../../modules";
 import { SettingsSideBar } from "./SettingsSideBar";
 
 export function MainMenu() {
+    const navigate = useNavigate();
     const [showSettings, setShowSettings] = useState(false);
 
     const showSideBar = () => setShowSettings(true);
     const hideSideBar = () => setShowSettings(false);
+
+    const navigateToGame = async () => {
+        const savedSettings = await getSettings();
+        navigate(`game?mode=${savedSettings.gameMode}`);
+    };
 
     return (
         <>
@@ -30,7 +38,7 @@ export function MainMenu() {
                             High Scores
                             <i className="bi bi-chevron-right ms-2"></i>
                         </Button>
-                        <Button href="/game">
+                        <Button onClick={navigateToGame}>
                             Play
                             <i className="bi bi-chevron-right ms-2"></i>
                         </Button>
