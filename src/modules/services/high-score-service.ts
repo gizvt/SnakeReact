@@ -1,4 +1,4 @@
-import { GameMode } from "..";
+import { GameMode } from "../domain/game-modes";
 
 const maxHighScores = 10;
 const composeKey = (gameMode: GameMode) => `highScores_${gameMode}`;
