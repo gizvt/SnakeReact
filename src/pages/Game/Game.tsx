@@ -18,9 +18,9 @@ export function Game() {
     }
 
     const {
+        boardSize,
         snakeCoords,
         pelletCoords,
-        boardSize,
         score,
         status,
         showHighScoreToast,

@@ -22,10 +22,9 @@ export function useGameState(gameMode: GameMode) {
     const [snakeCoords, setSnakeCoords] = useState<string[]>([]);
     const [showHighScoreToast, setShowHighScoreToast] = useState(false);
 
-    const boardSize = 15;
-    const board = useRef(new Board(boardSize, gameMode));
-    const audioPlayer = useRef(new AudioPlayer());
     const config = useRef(gameModeConfig[gameMode]);
+    const board = useRef(new Board(config.current.boardSize, gameMode));
+    const audioPlayer = useRef(new AudioPlayer());
 
     useEffect(() => {
         async function applyUserSettings() {
@@ -149,10 +148,12 @@ export function useGameState(gameMode: GameMode) {
         };
     }
 
+    const boardSize = config.current.boardSize;
+
     return {
+        boardSize,
         snakeCoords,
         pelletCoords,
-        boardSize,
         score,
         status,
         showHighScoreToast,
