@@ -82,7 +82,7 @@ export function useGameState(gameMode: GameMode) {
                 const newBoardState = getNewBoardState();
                 setSnakeCoords(newBoardState.snakeCoords);
                 setPelletCoords(newBoardState.pelletCoords);
-                setScore(board.current.snake!.pelletsEaten);
+                setScore(board.current.snake.pelletsEaten);
                 return;
             }
 
@@ -119,7 +119,7 @@ export function useGameState(gameMode: GameMode) {
             return;
         }
 
-        const score = board.current.snake!.pelletsEaten;
+        const score = board.current.snake.pelletsEaten;
         const playerName = await getPlayerName();
         board.current.reset();
 
@@ -134,11 +134,11 @@ export function useGameState(gameMode: GameMode) {
     };
 
     function getNewBoardState() {
-        const snakeCoords = board.current.snake!.points.map((point) =>
+        const snakeCoords = board.current.snake.points.map((point) =>
             point.toString()
         );
 
-        const pelletCoords = board.current.pellets!.map((pellet) =>
+        const pelletCoords = board.current.pellets.map((pellet) =>
             pellet.point.toString()
         );
 

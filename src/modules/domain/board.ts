@@ -119,7 +119,7 @@ export class Board {
         let point: Point;
         do {
             point = Point.random(this.size);
-        } while (this.snake?.containsPoint(point));
+        } while (this.snake.containsPoint(point));
 
         return point;
     }
