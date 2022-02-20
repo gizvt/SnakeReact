@@ -59,17 +59,17 @@ export class Snake {
     }
 
     public swapDirection() {
-        this._direction = this.direction.getOpposite();
         const tail = this.peekTail();
+        const penultimate = this.peekPenultimate();
 
-        if (this.containsPoint(tail.move(Direction.Right))) {
-            this._direction = Direction.Left;
-        } else if (this.containsPoint(tail.move(Direction.Left))) {
+        if (penultimate.move(Direction.Right).equals(tail)) {
             this._direction = Direction.Right;
-        } else if (this.containsPoint(tail.move(Direction.Up))) {
-            this._direction = Direction.Down;
-        } else {
+        } else if (penultimate.move(Direction.Left).equals(tail)) {
+            this._direction = Direction.Left;
+        } else if (penultimate.move(Direction.Up).equals(tail)) {
             this._direction = Direction.Up;
+        } else {
+            this._direction = Direction.Down;
         }
     }
 
@@ -85,5 +85,9 @@ export class Snake {
 
     private peekTail() {
         return this._points[this._points.length - 1];
+    }
+
+    private peekPenultimate() {
+        return this._points[this._points.length - 2];
     }
 }
