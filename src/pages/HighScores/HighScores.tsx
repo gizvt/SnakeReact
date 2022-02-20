@@ -8,6 +8,7 @@ export function HighScores() {
     const [wrapHighScores, setWrapHighScores] = useState<HighScore[]>([]);
     const [portalHighScores, setPortalHighScores] = useState<HighScore[]>([]);
     const [reboundHighScores, setReboundHighScores] = useState<HighScore[]>([]);
+    const [feastHighScores, setFeastHighScores] = useState<HighScore[]>([]);
 
     useEffect(() => {
         async function fetchHighScores() {
@@ -15,11 +16,13 @@ export function HighScores() {
             const wrap = await getHighScores("wrap");
             const portal = await getHighScores("portal");
             const rebound = await getHighScores("rebound");
+            const feast = await getHighScores("feast");
 
             setClassicHighScores(classic);
             setWrapHighScores(wrap);
             setPortalHighScores(portal);
             setReboundHighScores(rebound);
+            setFeastHighScores(feast);
         }
 
         fetchHighScores();
@@ -55,6 +58,9 @@ export function HighScores() {
                     </Tab>
                     <Tab eventKey="rebound" title="Rebound">
                         <HighScoresTable highScores={reboundHighScores} />
+                    </Tab>
+                    <Tab eventKey="feast" title="Feast">
+                        <HighScoresTable highScores={feastHighScores} />
                     </Tab>
                 </Tabs>
             </Col>

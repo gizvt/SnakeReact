@@ -107,7 +107,7 @@ export function useGameState(gameMode: GameMode) {
         }
 
         board.current.spawnSnake();
-        board.current.spawnPellets(config.current.numberOfPellets);
+        board.current.spawnPellets();
         const newBoardState = getNewBoardState();
         setSnakeCoords(newBoardState.snakeCoords);
         setPelletCoords(newBoardState.pelletCoords);

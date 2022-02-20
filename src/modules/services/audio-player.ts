@@ -12,6 +12,7 @@ export const pelletEatenSounds: Record<GameMode, Sound> = {
     wrap: Sound.PelletEaten,
     portal: Sound.PortalTaken,
     rebound: Sound.Rebounded,
+    feast: Sound.PelletEaten,
 };
 
 export class AudioPlayer {

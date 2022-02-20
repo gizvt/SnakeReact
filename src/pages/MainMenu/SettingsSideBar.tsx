@@ -95,6 +95,7 @@ export function SettingsSideBar(props: Props) {
                                         <option value={"rebound"}>
                                             Rebound
                                         </option>
+                                        <option value={"feast"}>Feast</option>
                                     </Form.Select>
                                 </Form.Group>
                                 <Form.Group>

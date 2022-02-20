@@ -7,6 +7,7 @@ import { Snake } from "./snake";
 export class Board {
     public snake: Snake = new Snake([]);
     public pellets: Pellet[] = [];
+    private config = gameModeConfig[this.gameMode];
 
     constructor(public readonly size: number, private gameMode: GameMode) {}
 
@@ -44,7 +45,7 @@ export class Board {
             }
 
             this.snake.eatPellet(this.gameMode);
-            this.spawnPellets(gameModeConfig[this.gameMode].numberOfPellets);
+            this.spawnPellets();
         }
 
         if (!pelletEaten || this.gameMode === "portal") {
@@ -58,7 +59,7 @@ export class Board {
     private getNewHeadPoint() {
         let newHeadPoint = this.snake.peekHead().move(this.snake.direction);
 
-        if (this.gameMode !== "classic") {
+        if (this.gameMode !== "classic" && this.gameMode !== "feast") {
             return newHeadPoint.isOutOfBounds(this.size)
                 ? newHeadPoint.wrap(this.snake.direction, this.size)
                 : newHeadPoint;
@@ -67,18 +68,26 @@ export class Board {
         return newHeadPoint;
     }
 
-    public spawnPellets(number: number) {
+    public spawnPellets() {
         if (!this.snake) {
             throw new Error(
                 "Cannot spawn a Pellet without first spawning a Snake."
             );
         }
 
-        const alreadySpawned = (point: Point) =>
-            pellets.some((pellet) => pellet.point.equals(point));
+        const alreadySpawned = (newPoint: Point) =>
+            pellets.some((pellet) => pellet.point.equals(newPoint));
 
-        let pellets: Pellet[] = [];
-        for (let i = 0; i < number; i++) {
+        // If respawnAllPellets is false, kepp any pellets that do not occupy
+        // the same point as the snake's head (that one has just been eaten).
+        let pellets: Pellet[] = this.config.respawnAllPellets
+            ? []
+            : this.pellets.filter(
+                  (p) => !p.point.equals(this.snake.peekHead())
+              );
+
+        // Fill the pellets array up to the permitted number of pellets.
+        for (let i = pellets.length; i < this.config.numberOfPellets; i++) {
             let point: Point;
             do {
                 point = this.getEmptyPoint();
