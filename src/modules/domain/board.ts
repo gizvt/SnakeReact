@@ -59,7 +59,7 @@ export class Board {
     private getNewHeadPoint() {
         let newHeadPoint = this.snake.peekHead().move(this.snake.direction);
 
-        if (this.gameMode !== "classic" && this.gameMode !== "feast") {
+        if (this.config.wrap) {
             return newHeadPoint.isOutOfBounds(this.size)
                 ? newHeadPoint.wrap(this.snake.direction, this.size)
                 : newHeadPoint;
