@@ -99,22 +99,30 @@ export function SettingsSideBar(props: Props) {
                                     </Form.Select>
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Label>
-                                        Volume (
-                                        {Math.round(settings.volume * 100)})
-                                    </Form.Label>
-                                    <Form.Range
-                                        min={0}
-                                        max={1}
-                                        step={0.01}
-                                        value={settings.volume}
-                                        onChange={(e) =>
-                                            setSettings({
-                                                ...settings,
-                                                volume: +e.target.value,
-                                            })
-                                        }
-                                    ></Form.Range>
+                                    <Form.Label>Volume</Form.Label>
+                                    <div className="d-flex">
+                                        <div style={{ width: "10%" }}>
+                                            <b>
+                                                {Math.round(
+                                                    settings.volume * 100
+                                                )}
+                                            </b>
+                                        </div>
+                                        <div className="flex-grow-1">
+                                            <Form.Range
+                                                min={0}
+                                                max={1}
+                                                step={0.01}
+                                                value={settings.volume}
+                                                onChange={(e) =>
+                                                    setSettings({
+                                                        ...settings,
+                                                        volume: +e.target.value,
+                                                    })
+                                                }
+                                            ></Form.Range>
+                                        </div>
+                                    </div>
                                 </Form.Group>
                             </Form>
                         </Card.Body>
