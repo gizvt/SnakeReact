@@ -4,12 +4,12 @@ const settingsKey = "settings";
 const playerNameKey = "playerName";
 
 export const defaultSettings: Settings = {
-    audioEnabled: true,
+    volume: 1,
     gameMode: "classic",
 };
 
 export interface Settings {
-    audioEnabled: boolean;
+    volume: number;
     gameMode: GameMode;
 }
 

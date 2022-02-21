@@ -99,17 +99,22 @@ export function SettingsSideBar(props: Props) {
                                     </Form.Select>
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Check
+                                    <Form.Label>
+                                        Volume (
+                                        {Math.round(settings.volume * 100)})
+                                    </Form.Label>
+                                    <Form.Range
+                                        min={0}
+                                        max={1}
+                                        step={0.01}
+                                        value={settings.volume}
                                         onChange={(e) =>
                                             setSettings({
                                                 ...settings,
-                                                audioEnabled: e.target.checked,
+                                                volume: +e.target.value,
                                             })
                                         }
-                                        type="switch"
-                                        label="Audio"
-                                        checked={settings.audioEnabled}
-                                    />
+                                    ></Form.Range>
                                 </Form.Group>
                             </Form>
                         </Card.Body>

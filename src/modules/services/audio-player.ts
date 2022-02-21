@@ -16,11 +16,13 @@ export const pelletEatenSounds: Record<GameMode, Sound> = {
 };
 
 export class AudioPlayer {
-    constructor(public isEnabled: boolean = false) {}
+    constructor(public volume: number = 1) {}
 
     play(sound: Sound) {
-        if (this.isEnabled) {
-            new Audio(sound).play();
+        if (this.volume > 0) {
+            const audio = new Audio(sound);
+            audio.volume = this.volume;
+            audio.play();
         }
     }
 

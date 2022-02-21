@@ -29,7 +29,7 @@ export function useGameState(gameMode: GameMode) {
     useEffect(() => {
         async function applyUserSettings() {
             const userSettings = await getSettings();
-            audioPlayer.current.isEnabled = userSettings.audioEnabled;
+            audioPlayer.current.volume = userSettings.volume;
             audioPlayer.current.init();
         }
 
