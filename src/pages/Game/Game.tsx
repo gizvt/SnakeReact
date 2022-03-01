@@ -40,7 +40,7 @@ export function Game() {
             />
             {showHighScoreToast && <HighScoreToast score={score} />}
             <TopBar
-                showTimer={status === "InProgress"}
+                gameStatus={status}
                 score={score}
                 spinLogo={status === "InProgress"}
             />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 interface Props {
-    shouldRun: boolean;
+    status: "Active" | "Stopped" | "Paused";
 }
 
 export function Timer(props: Props) {
@@ -10,15 +10,20 @@ export function Timer(props: Props) {
     const reset = () => setTime(0);
 
     useEffect(() => {
-        if (props.shouldRun) {
-            const intervalId = setInterval(() => tick(), 1000);
+        const intervalId = setInterval(() => tick(), 1000);
 
-            return function cleanup() {
-                clearInterval(intervalId);
+        if (props.status !== "Active") {
+            if (props.status === "Stopped") {
                 reset();
-            };
+            }
+
+            clearInterval(intervalId);
         }
-    }, [props.shouldRun]);
+
+        return function cleanup() {
+            clearInterval(intervalId);
+        };
+    }, [props.status]);
 
     return (
         <span className="lead">

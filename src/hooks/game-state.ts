@@ -13,10 +13,10 @@ import {
 } from "../modules";
 import inputHandler from "../modules/services/input-handler";
 
-type Status = "Idle" | "InProgress" | "Paused" | "GameOver";
+export type GameStatus = "Idle" | "InProgress" | "Paused" | "GameOver";
 
 export function useGameState(gameMode: GameMode) {
-    const [status, setStatus] = useState<Status>("Idle");
+    const [gameStatus, setGameStatus] = useState<GameStatus>("Idle");
     const [score, setScore] = useState(0);
     const [pelletCoords, setPelletCoords] = useState<string[]>([]);
     const [snakeCoords, setSnakeCoords] = useState<string[]>([]);
@@ -38,17 +38,17 @@ export function useGameState(gameMode: GameMode) {
 
     useEffect(() => {
         const handleKeyDown = (keyboardEvent: KeyboardEvent) => {
-            if (status === "Idle") {
+            if (gameStatus === "Idle") {
                 return;
             }
 
             if (keyboardEvent.key === " ") {
                 // Game is either in progress or paused. Toggle pause.
                 const newStatus =
-                    status === "InProgress" ? "Paused" : "InProgress";
+                    gameStatus === "InProgress" ? "Paused" : "InProgress";
 
-                setStatus(newStatus);
-            } else if (status === "InProgress") {
+                setGameStatus(newStatus);
+            } else if (gameStatus === "InProgress") {
                 // Only listen to inputs if the game is in progress.
                 inputHandler.setNextDirection(
                     Direction.fromKey(keyboardEvent.key),
@@ -62,7 +62,7 @@ export function useGameState(gameMode: GameMode) {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [status]);
+    }, [gameStatus]);
 
     // Uses setInterval to run the gameLoop every x seconds. If the status
     // changes to "Paused", I think the cleanup will remove the setInterval from
@@ -70,7 +70,7 @@ export function useGameState(gameMode: GameMode) {
     // interval and pausing the game.
     useEffect(() => {
         const gameLoop = () => {
-            if (status === "Paused") {
+            if (gameStatus === "Paused") {
                 return;
             }
 
@@ -90,19 +90,19 @@ export function useGameState(gameMode: GameMode) {
                 new CustomEvent("PlayAudio", { detail: Sound.GameOver })
             );
 
-            setStatus("GameOver");
+            setGameStatus("GameOver");
         };
 
-        if (status === "InProgress") {
+        if (gameStatus === "InProgress") {
             const timerId = setInterval(() => gameLoop(), config.current.speed);
             return () => {
                 clearInterval(timerId);
             };
         }
-    }, [status]);
+    }, [gameStatus]);
 
     const startGame = async () => {
-        if (status !== "Idle") {
+        if (gameStatus !== "Idle") {
             return;
         }
 
@@ -111,11 +111,11 @@ export function useGameState(gameMode: GameMode) {
         const newBoardState = getNewBoardState();
         setSnakeCoords(newBoardState.snakeCoords);
         setPelletCoords(newBoardState.pelletCoords);
-        setStatus("InProgress");
+        setGameStatus("InProgress");
     };
 
     const endGame = async () => {
-        if (status !== "GameOver") {
+        if (gameStatus !== "GameOver") {
             return;
         }
 
@@ -130,7 +130,7 @@ export function useGameState(gameMode: GameMode) {
 
         setSnakeCoords([]);
         setPelletCoords([]);
-        setStatus("Idle");
+        setGameStatus("Idle");
     };
 
     function getNewBoardState() {
@@ -155,7 +155,7 @@ export function useGameState(gameMode: GameMode) {
         snakeCoords,
         pelletCoords,
         score,
-        status,
+        status: gameStatus,
         showHighScoreToast,
         startGame,
         endGame,
