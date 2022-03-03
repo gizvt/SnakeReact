@@ -24,12 +24,14 @@ export function Game() {
         score,
         status,
         showHighScoreToast,
+        setShowHighScoreToast,
         startGame,
         endGame,
     } = useGameState(gameMode);
 
     const handleStartGame = async () => await startGame();
     const handleGameOver = async () => await endGame();
+    const handleToastClose = () => setShowHighScoreToast(false);
 
     return (
         <>
@@ -38,7 +40,11 @@ export function Game() {
                 score={score}
                 handleClose={handleGameOver}
             />
-            {showHighScoreToast && <HighScoreToast score={score} />}
+            <HighScoreToast
+                show={showHighScoreToast}
+                score={score}
+                handleClose={handleToastClose}
+            />
             <TopBar
                 gameStatus={status}
                 score={score}

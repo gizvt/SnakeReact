@@ -25,6 +25,7 @@ export function useGameState(gameMode: GameMode) {
     const config = useRef(gameModeConfig[gameMode]);
     const board = useRef(new Board(config.current.boardSize, gameMode));
     const audioPlayer = useRef(new AudioPlayer());
+    const toastTimeout = useRef<NodeJS.Timeout>();
 
     useEffect(() => {
         async function applyUserSettings() {
@@ -106,6 +107,12 @@ export function useGameState(gameMode: GameMode) {
             return;
         }
 
+        // If the toast is showing, hide it and clear its timeout.
+        if (showHighScoreToast) {
+            setShowHighScoreToast(false);
+            toastTimeout.current && clearTimeout(toastTimeout.current);
+        }
+
         board.current.spawnSnake();
         board.current.spawnPellets();
         const newBoardState = getNewBoardState();
@@ -126,6 +133,12 @@ export function useGameState(gameMode: GameMode) {
         if (playerName && (await isNewHighScore(score, gameMode))) {
             await addHighScore(playerName, score, gameMode);
             setShowHighScoreToast(true);
+
+            // Hide the toast after 5 seconds.
+            toastTimeout.current = setTimeout(
+                () => setShowHighScoreToast(false),
+                5000
+            );
         }
 
         setSnakeCoords([]);
@@ -157,6 +170,7 @@ export function useGameState(gameMode: GameMode) {
         score,
         status: gameStatus,
         showHighScoreToast,
+        setShowHighScoreToast,
         startGame,
         endGame,
     };
