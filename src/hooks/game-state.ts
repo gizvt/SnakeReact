@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import {
     addHighScore,
-    AudioPlayer,
     Board,
     Direction,
     GameMode,
     gameModeConfig,
     getPlayerName,
-    getSettings,
     isNewHighScore,
     Sound,
 } from "../modules";
@@ -24,18 +22,7 @@ export function useGameState(gameMode: GameMode) {
 
     const config = useRef(gameModeConfig[gameMode]);
     const board = useRef(new Board(config.current.boardSize, gameMode));
-    const audioPlayer = useRef(new AudioPlayer());
     const toastTimeout = useRef<NodeJS.Timeout>();
-
-    useEffect(() => {
-        async function applyUserSettings() {
-            const userSettings = await getSettings();
-            audioPlayer.current.volume = userSettings.volume;
-            audioPlayer.current.init();
-        }
-
-        applyUserSettings();
-    }, []);
 
     useEffect(() => {
         const handleKeyDown = (keyboardEvent: KeyboardEvent) => {

@@ -8,14 +8,12 @@ import {
     Stack,
 } from "react-bootstrap";
 import {
-    AudioPlayer,
     defaultSettings,
     GameMode,
     getPlayerName,
     getSettings,
     savePlayerName,
     saveSettings,
-    Sound,
 } from "../../modules";
 
 interface Props {
@@ -26,12 +24,9 @@ interface Props {
 export function SettingsSideBar(props: Props) {
     const [playerName, setPlayerName] = useState("");
     const [settings, setSettings] = useState(defaultSettings);
-
-    const audioPlayer = useRef(new AudioPlayer());
+    const settingsLoaded = useRef(false);
 
     const onHide = async () => {
-        await saveSettings(settings);
-        await savePlayerName(playerName);
         props.handleClose();
     };
 
@@ -41,10 +36,25 @@ export function SettingsSideBar(props: Props) {
             const settings = await getSettings();
             playerName && setPlayerName(playerName);
             setSettings(settings);
+            settingsLoaded.current = true;
         }
 
         fetchSettings();
     }, []);
+
+    useEffect(() => {
+        async function save() {
+            // Only save if the initial settings load has been done. This avoids
+            // the default settings (initialised in useState) from being saved
+            // over the existing settings when they are initially loaded.
+            if (settingsLoaded.current) {
+                saveSettings(settings);
+                savePlayerName(playerName);
+            }
+        }
+
+        save();
+    }, [settings, playerName]);
 
     return (
         <Offcanvas show={props.show} onHide={onHide}>
@@ -124,14 +134,6 @@ export function SettingsSideBar(props: Props) {
                                                         volume: +e.target.value,
                                                     })
                                                 }
-                                                onMouseUp={() => {
-                                                    audioPlayer.current.volume =
-                                                        settings.volume;
-
-                                                    audioPlayer.current.play(
-                                                        Sound.GameOver
-                                                    );
-                                                }}
                                             ></Form.Range>
                                         </div>
                                     </div>

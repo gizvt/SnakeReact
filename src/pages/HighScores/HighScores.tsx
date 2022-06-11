@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Row, Stack, Tab, Tabs } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { getHighScores, HighScore } from "../../modules";
 import { HighScoresTable } from "./HighScoresTable";
 
 export function HighScores() {
+    const navigate = useNavigate();
+
     const [classicHighScores, setClassicHighScores] = useState<HighScore[]>([]);
     const [wrapHighScores, setWrapHighScores] = useState<HighScore[]>([]);
     const [portalHighScores, setPortalHighScores] = useState<HighScore[]>([]);
@@ -35,7 +38,7 @@ export function HighScores() {
                     <Button
                         className="me-3 me-auto"
                         variant="outline-primary"
-                        href="/"
+                        onClick={() => navigate("/")}
                     >
                         <i className="bi bi-chevron-left me-2"></i>
                         Main Menu

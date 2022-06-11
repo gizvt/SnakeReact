@@ -17,6 +17,10 @@ export function MainMenu() {
         navigate(`game?mode=${savedSettings.gameMode}`);
     };
 
+    // Using navigate("path") inside an onClick instead of just doing
+    // href="path" ensures that the audio plays when clicking. It might be
+    // because it doesn't rerender the entire component tree (assumption from
+    // watching the react browser tools component tree while navigating).
     return (
         <>
             <SettingsSideBar
@@ -34,7 +38,10 @@ export function MainMenu() {
                         >
                             Settings
                         </Button>
-                        <Button href="/high-scores" variant="outline-primary">
+                        <Button
+                            variant="outline-primary"
+                            onClick={() => navigate("/high-scores")}
+                        >
                             High Scores
                             <i className="bi bi-chevron-right ms-2"></i>
                         </Button>
