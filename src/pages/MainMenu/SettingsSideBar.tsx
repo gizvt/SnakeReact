@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     Button,
     Card,
@@ -8,12 +8,14 @@ import {
     Stack,
 } from "react-bootstrap";
 import {
+    AudioPlayer,
     defaultSettings,
     GameMode,
     getPlayerName,
     getSettings,
     savePlayerName,
     saveSettings,
+    Sound,
 } from "../../modules";
 
 interface Props {
@@ -24,6 +26,8 @@ interface Props {
 export function SettingsSideBar(props: Props) {
     const [playerName, setPlayerName] = useState("");
     const [settings, setSettings] = useState(defaultSettings);
+
+    const audioPlayer = useRef(new AudioPlayer());
 
     const onHide = async () => {
         await saveSettings(settings);
@@ -120,6 +124,14 @@ export function SettingsSideBar(props: Props) {
                                                         volume: +e.target.value,
                                                     })
                                                 }
+                                                onMouseUp={() => {
+                                                    audioPlayer.current.volume =
+                                                        settings.volume;
+
+                                                    audioPlayer.current.play(
+                                                        Sound.GameOver
+                                                    );
+                                                }}
                                             ></Form.Range>
                                         </div>
                                     </div>
