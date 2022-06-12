@@ -20,6 +20,19 @@ export const pelletEatenSounds: Record<GameMode, Sound> = {
 export class AudioPlayer {
     private readonly clickyNodeNames = ["BUTTON", "A", "SELECT", "INPUT"];
 
+    private handlePlayAudio = ((event: CustomEvent<Sound>) => {
+        this.play(event.detail);
+    }) as EventListener;
+
+    private handleClick = (event: Event) => {
+        if (
+            event.target instanceof HTMLElement &&
+            this.clickyNodeNames.includes(event.target.nodeName)
+        ) {
+            this.play(Sound.Click);
+        }
+    };
+
     private async getVolume() {
         return (await getSettings()).volume;
     }
@@ -35,18 +48,13 @@ export class AudioPlayer {
         }
     }
 
-    init() {
-        document.addEventListener("PlayAudio", ((event: CustomEvent<Sound>) => {
-            this.play(event.detail);
-        }) as EventListener);
+    attachListeners() {
+        document.addEventListener("PlayAudio", this.handlePlayAudio);
+        document.addEventListener("click", this.handleClick);
+    }
 
-        document.addEventListener("click", ({ target }) => {
-            if (
-                target instanceof HTMLElement &&
-                this.clickyNodeNames.includes(target.nodeName)
-            ) {
-                this.play(Sound.Click);
-            }
-        });
+    detachListeners() {
+        document.removeEventListener("PlayAudio", this.handlePlayAudio);
+        document.removeEventListener("click", this.handleClick);
     }
 }
