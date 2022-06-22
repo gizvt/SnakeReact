@@ -56,12 +56,5 @@ export const gameModeConfig: Record<GameMode, Config> = {
 
 export function isGameMode(value: unknown): value is GameMode {
     const gameMode = value as GameMode;
-
-    return (
-        gameMode === "classic" ||
-        gameMode === "wrap" ||
-        gameMode === "portal" ||
-        gameMode === "rebound" ||
-        gameMode === "feast"
-    );
+    return allGameModes.includes(gameMode);
 }
