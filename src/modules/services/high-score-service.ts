@@ -1,4 +1,4 @@
-import { GameMode } from "../domain/game-modes";
+import { GameMode, allGameModes } from "../domain/game-modes";
 
 const maxHighScores = 10;
 const composeKey = (gameMode: GameMode) => `highScores_${gameMode}`;
@@ -9,6 +9,26 @@ export interface HighScore {
     score: number;
     gameMode: GameMode;
     date: string;
+}
+
+export interface GameModeHighScores {
+    gameMode: GameMode;
+    highScores: HighScore[];
+}
+
+export async function getAllHighScores(): Promise<GameModeHighScores[]> {
+    const allHighScores = allGameModes.map(async (gameMode) => {
+        const highScores = await getHighScores(gameMode);
+
+        const gameModeHighScores: GameModeHighScores = {
+            gameMode: gameMode,
+            highScores: highScores,
+        };
+
+        return gameModeHighScores;
+    });
+
+    return Promise.all(allHighScores);
 }
 
 export async function getHighScores(gameMode: GameMode) {

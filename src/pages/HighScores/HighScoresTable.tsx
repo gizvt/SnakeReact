@@ -1,4 +1,4 @@
-import { Table } from "react-bootstrap";
+import { Alert, Table } from "react-bootstrap";
 import { HighScore } from "../../modules";
 
 interface Props {
@@ -6,6 +6,14 @@ interface Props {
 }
 
 export function HighScoresTable(props: Props) {
+    if (!props.highScores.length) {
+        return (
+            <Alert variant="primary">
+                No high scores have been recorded for this game mode :(
+            </Alert>
+        );
+    }
+
     return (
         <Table striped bordered hover>
             <thead>
@@ -18,15 +26,17 @@ export function HighScoresTable(props: Props) {
                 </tr>
             </thead>
             <tbody>
-                {props.highScores.sort(strongestFirst).map((hs, index) => (
-                    <tr key={hs.date}>
-                        <td className="text-center">{getMedal(index)}</td>
-                        <td>{index + 1}</td>
-                        <td>{hs.playerName}</td>
-                        <td>{hs.score}</td>
-                        <td>{new Date(hs.date).toLocaleString()}</td>
-                    </tr>
-                ))}
+                {props.highScores
+                    .sort(strongestFirst)
+                    .map((highScore, index) => (
+                        <tr key={highScore.id}>
+                            <td className="text-center">{getMedal(index)}</td>
+                            <td>{index + 1}</td>
+                            <td>{highScore.playerName}</td>
+                            <td>{highScore.score}</td>
+                            <td>{new Date(highScore.date).toLocaleString()}</td>
+                        </tr>
+                    ))}
             </tbody>
         </Table>
     );

@@ -8,6 +8,14 @@ interface Config {
 
 export type GameMode = "classic" | "wrap" | "portal" | "rebound" | "feast";
 
+export const allGameModes: GameMode[] = [
+    "classic",
+    "feast",
+    "portal",
+    "rebound",
+    "wrap",
+];
+
 export const gameModeConfig: Record<GameMode, Config> = {
     classic: {
         numberOfPellets: 1,

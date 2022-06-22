@@ -1,31 +1,24 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Row, Stack, Tab, Tabs } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { getHighScores, HighScore } from "../../modules";
+import {
+    capitalise,
+    GameModeHighScores,
+    getAllHighScores,
+} from "../../modules";
 import { HighScoresTable } from "./HighScoresTable";
 
 export function HighScores() {
     const navigate = useNavigate();
 
-    const [classicHighScores, setClassicHighScores] = useState<HighScore[]>([]);
-    const [wrapHighScores, setWrapHighScores] = useState<HighScore[]>([]);
-    const [portalHighScores, setPortalHighScores] = useState<HighScore[]>([]);
-    const [reboundHighScores, setReboundHighScores] = useState<HighScore[]>([]);
-    const [feastHighScores, setFeastHighScores] = useState<HighScore[]>([]);
+    const [allHighScores, setAllHighScores] = useState<GameModeHighScores[]>(
+        []
+    );
 
     useEffect(() => {
         async function fetchHighScores() {
-            const classic = await getHighScores("classic");
-            const wrap = await getHighScores("wrap");
-            const portal = await getHighScores("portal");
-            const rebound = await getHighScores("rebound");
-            const feast = await getHighScores("feast");
-
-            setClassicHighScores(classic);
-            setWrapHighScores(wrap);
-            setPortalHighScores(portal);
-            setReboundHighScores(rebound);
-            setFeastHighScores(feast);
+            const allHighScores = await getAllHighScores();
+            setAllHighScores(allHighScores);
         }
 
         fetchHighScores();
@@ -50,21 +43,17 @@ export function HighScores() {
                     className="mb-4"
                     transition={true}
                 >
-                    <Tab eventKey={"classic"} title="Classic">
-                        <HighScoresTable highScores={classicHighScores} />
-                    </Tab>
-                    <Tab eventKey="wrap" title="Wrap">
-                        <HighScoresTable highScores={wrapHighScores} />
-                    </Tab>
-                    <Tab eventKey="portal" title="Portal">
-                        <HighScoresTable highScores={portalHighScores} />
-                    </Tab>
-                    <Tab eventKey="rebound" title="Rebound">
-                        <HighScoresTable highScores={reboundHighScores} />
-                    </Tab>
-                    <Tab eventKey="feast" title="Feast">
-                        <HighScoresTable highScores={feastHighScores} />
-                    </Tab>
+                    {allHighScores.map((gameModeHighScores) => (
+                        <Tab
+                            key={gameModeHighScores.gameMode}
+                            eventKey={gameModeHighScores.gameMode}
+                            title={capitalise(gameModeHighScores.gameMode)}
+                        >
+                            <HighScoresTable
+                                highScores={gameModeHighScores.highScores}
+                            />
+                        </Tab>
+                    ))}
                 </Tabs>
             </Col>
         </Row>

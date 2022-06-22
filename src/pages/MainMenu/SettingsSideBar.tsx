@@ -8,6 +8,8 @@ import {
     Stack,
 } from "react-bootstrap";
 import {
+    allGameModes,
+    capitalise,
     defaultSettings,
     GameMode,
     getPlayerName,
@@ -101,15 +103,14 @@ export function SettingsSideBar(props: Props) {
                                         }
                                         defaultValue={settings.gameMode}
                                     >
-                                        <option value={"classic"}>
-                                            Classic
-                                        </option>
-                                        <option value={"wrap"}>Wrap</option>
-                                        <option value={"portal"}>Portal</option>
-                                        <option value={"rebound"}>
-                                            Rebound
-                                        </option>
-                                        <option value={"feast"}>Feast</option>
+                                        {allGameModes.map((gameMode) => (
+                                            <option
+                                                key={gameMode}
+                                                value={gameMode}
+                                            >
+                                                {capitalise(gameMode)}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Form.Group>
                                 <Form.Group>
