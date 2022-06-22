@@ -1,9 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import {
-    Board as BoardComponent,
-    GameOverModal,
-    HighScoreToast,
-} from "../../components";
+import { Board, GameOverModal, HighScoreToast } from "../../components";
 import { useGameState } from "../../hooks/game-state";
 import { isGameMode } from "../../modules";
 import { BottomBar } from "./BottomBar";
@@ -50,11 +46,11 @@ export function Game() {
                 score={score}
                 spinLogo={status === "InProgress"}
             />
-            <BoardComponent
+            <Board
                 size={boardSize}
                 pelletCoords={pelletCoords}
                 snakeCoords={snakeCoords}
-            ></BoardComponent>
+            ></Board>
             <BottomBar
                 handleStartGame={handleStartGame}
                 disableStartButton={status !== "Idle"}
