@@ -1,4 +1,3 @@
-import { GameMode } from "../domain/game-modes";
 import { getSettings } from "./settings-service";
 
 export enum Sound {
@@ -8,14 +7,6 @@ export enum Sound {
     GameOver = "GameOver.ogg",
     Click = "Click.ogg",
 }
-
-export const pelletEatenSounds: Record<GameMode, Sound> = {
-    classic: Sound.PelletEaten,
-    wrap: Sound.PelletEaten,
-    portal: Sound.PortalTaken,
-    rebound: Sound.Rebounded,
-    feast: Sound.PelletEaten,
-};
 
 export class AudioPlayer {
     private readonly clickyNodeNames = ["BUTTON", "A", "SELECT", "INPUT"];

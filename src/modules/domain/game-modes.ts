@@ -1,3 +1,5 @@
+import { Sound } from "../services/audio-player";
+
 interface Config {
     numberOfPellets: number;
     respawnAllPellets: boolean;
@@ -52,6 +54,14 @@ export const gameModeConfig: Record<GameMode, Config> = {
         boardSize: 15,
         wrap: false,
     },
+};
+
+export const pelletEatenSounds: Record<GameMode, Sound> = {
+    classic: Sound.PelletEaten,
+    wrap: Sound.PelletEaten,
+    portal: Sound.PortalTaken,
+    rebound: Sound.Rebounded,
+    feast: Sound.PelletEaten,
 };
 
 export function isGameMode(value: unknown): value is GameMode {
