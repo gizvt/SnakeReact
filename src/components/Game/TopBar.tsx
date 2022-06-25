@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row, Stack } from "react-bootstrap";
-import { PlayerName, Score, Timer, Title } from "../../components";
+import { PlayerName, Score, Timer, Title } from "..";
 import { GameStatus } from "../../hooks/game-state";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
     spinLogo: boolean;
 }
 
-export const TopBar = React.memo(function (props: Props) {
+export const GameTopBar = React.memo(function (props: Props) {
     return (
         <Row>
             <Col className="d-flex justify-content-center">

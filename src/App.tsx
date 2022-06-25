@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AudioPlayer } from "./modules";
-import { Game } from "./pages/Game/Game";
-import { HighScores } from "./pages/HighScores/HighScores";
-import { MainMenu } from "./pages/MainMenu/MainMenu";
+import { Game } from "./pages/Game";
+import { HighScores } from "./pages/HighScores";
+import { MainMenu } from "./pages/MainMenu";
 
 export const App = React.memo(function () {
     useEffect(() => {

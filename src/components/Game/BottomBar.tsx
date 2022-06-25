@@ -7,7 +7,7 @@ interface Props {
     handleStartGame(): void;
 }
 
-export const BottomBar = React.memo(function (props: Props) {
+export const GameBottomBar = React.memo(function (props: Props) {
     const navigate = useNavigate();
 
     return (
