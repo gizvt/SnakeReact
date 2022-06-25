@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getPlayerName } from "../../modules";
 
 export function PlayerName() {
     const [playerName, setPlayerName] = useState("");
@@ -18,8 +19,4 @@ export function PlayerName() {
             {playerName}
         </span>
     );
-}
-
-async function getPlayerName() {
-    return localStorage.getItem("playerName");
 }
