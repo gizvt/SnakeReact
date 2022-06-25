@@ -26,19 +26,21 @@ export function HighScoresTable(props: Props) {
                 </tr>
             </thead>
             <tbody>
-                {props.highScores
-                    .sort(strongestFirst)
-                    .map((highScore, index) => (
-                        <tr key={highScore.id}>
-                            <td className="text-center">{getMedal(index)}</td>
-                            <td>{index + 1}</td>
-                            <td>{highScore.playerName}</td>
-                            <td>{highScore.score}</td>
-                            <td>{new Date(highScore.date).toLocaleString()}</td>
-                        </tr>
-                    ))}
+                {props.highScores.sort(strongestFirst).map(toHighScoreRow)}
             </tbody>
         </Table>
+    );
+}
+
+function toHighScoreRow(highScore: HighScore, rank: number) {
+    return (
+        <tr key={highScore.id}>
+            <td className="text-center">{getMedal(rank)}</td>
+            <td>{rank + 1}</td>
+            <td>{highScore.playerName}</td>
+            <td>{highScore.score}</td>
+            <td>{new Date(highScore.date).toLocaleString()}</td>
+        </tr>
     );
 }
 
