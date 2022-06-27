@@ -6,11 +6,15 @@ const playerNameKey = "playerName";
 export const defaultSettings: Settings = {
     volume: 1,
     gameMode: "classic",
+    snakeColour: "#00b400",
+    pelletColour: "#000000",
 };
 
 export interface Settings {
     volume: number;
     gameMode: GameMode;
+    snakeColour: string;
+    pelletColour: string;
 }
 
 export async function getSettings() {

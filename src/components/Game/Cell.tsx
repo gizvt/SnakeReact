@@ -1,21 +1,13 @@
 import React from "react";
 
-export type CellType = "Snake" | "Pellet" | "Empty";
-
 export interface Props {
-    type: CellType;
+    colour: string;
 }
 
 export const Cell = React.memo(function Cell(props: Props) {
-    console.log(`Rendering a cell of type ${props.type}`);
-    switch (props.type) {
-        case "Empty":
-            return <div className="cell"></div>;
-        case "Pellet":
-            return <div className="cell pellet"></div>;
-        case "Snake":
-            return <div className="cell snake"></div>;
-        default:
-            throw new Error("Unrecognised Cell Type.");
-    }
+    console.log(`Rendering a cell with colour ${props.colour}`);
+
+    return (
+        <div className="cell" style={{ backgroundColor: props.colour }}></div>
+    );
 });

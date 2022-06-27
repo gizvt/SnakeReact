@@ -7,8 +7,8 @@ import {
     useState,
 } from "react";
 import { Col, Row } from "react-bootstrap";
-import { Cell, CellType } from "..";
-import { Point } from "../../modules";
+import { Cell } from "..";
+import { defaultSettings, getSettings, Point, Settings } from "../../modules";
 
 interface Cells {
     [key: string]: ReactElement;
@@ -23,17 +23,29 @@ interface Props {
 export const Board: FunctionComponent<Props> = (props) => {
     const emptyCells = useRef<Cells>(createCells(props.size));
     const [cells, setCells] = useState<Cells>(emptyCells.current);
+    let settings = useRef<Settings>(defaultSettings);
+
+    useEffect(() => {
+        async function fetchSettings() {
+            const savedSettings = await getSettings();
+            settings.current = savedSettings;
+        }
+
+        fetchSettings();
+    }, []);
 
     useEffect(() => {
         setCells(() => {
             const newCells = { ...emptyCells.current };
 
             props.snakeCoords.forEach(
-                (p) => (newCells[p] = createCell(p, "Snake"))
+                (p) =>
+                    (newCells[p] = createCell(p, settings.current.snakeColour))
             );
 
             props.pelletCoords.forEach(
-                (p) => (newCells[p] = createCell(p, "Pellet"))
+                (p) =>
+                    (newCells[p] = createCell(p, settings.current.pelletColour))
             );
 
             return newCells;
@@ -67,12 +79,12 @@ function createCells(boardSize: number) {
         const y = Math.floor(i / boardSize);
         const x = i - y * boardSize;
         const point = new Point(x, y).toString();
-        cells[point] = createCell(point, "Empty");
+        cells[point] = createCell(point, "#ffffff");
     }
 
     return cells;
 }
 
-function createCell(coords: string, type: CellType) {
-    return <Cell key={coords} type={type} />;
+function createCell(coords: string, colour: string) {
+    return <Cell key={coords} colour={colour} />;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Card, Form } from "react-bootstrap";
+import { Card, Form, Stack } from "react-bootstrap";
 import {
     allGameModes,
     capitalise,
@@ -61,6 +61,35 @@ export function GameSettings() {
                             ))}
                         </Form.Select>
                     </Form.Group>
+                    <Stack direction="horizontal" gap={4}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Snake colour</Form.Label>
+                            <Form.Control
+                                className="text-center"
+                                type="color"
+                                onChange={(e) =>
+                                    setSettings({
+                                        ...settings,
+                                        snakeColour: e.target.value,
+                                    })
+                                }
+                                value={settings.snakeColour}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Pellet colour</Form.Label>
+                            <Form.Control
+                                type="color"
+                                onChange={(e) =>
+                                    setSettings({
+                                        ...settings,
+                                        pelletColour: e.target.value,
+                                    })
+                                }
+                                value={settings.pelletColour}
+                            />
+                        </Form.Group>
+                    </Stack>
                     <Form.Group>
                         <Form.Label>Volume</Form.Label>
                         <div className="d-flex">
