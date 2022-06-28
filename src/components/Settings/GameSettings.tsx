@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Card, Form, Stack } from "react-bootstrap";
+import { Button, Card, Form, Stack } from "react-bootstrap";
 import {
     allGameModes,
     capitalise,
@@ -36,10 +36,19 @@ export function GameSettings() {
         save();
     }, [settings]);
 
+    const restoreDefaults = () => {
+        setSettings(defaultSettings);
+    };
+
     return (
         <Card>
             <Card.Header>
-                <i className="bi bi-sliders me-2"></i>Game
+                <Stack direction="horizontal">
+                    <i className="bi bi-sliders me-2"></i>Game
+                    <Button variant="link ms-auto" onClick={restoreDefaults}>
+                        Reset
+                    </Button>
+                </Stack>
             </Card.Header>
             <Card.Body>
                 <Form>
