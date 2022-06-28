@@ -31,6 +31,10 @@ export function useGameState(gameMode: GameMode) {
             }
 
             if (keyboardEvent.key === " ") {
+                if (gameStatus === "GameOver") {
+                    return;
+                }
+
                 // Game is either in progress or paused. Toggle pause.
                 const newStatus =
                     gameStatus === "InProgress" ? "Paused" : "InProgress";
