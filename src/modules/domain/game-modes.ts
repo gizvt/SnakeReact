@@ -4,8 +4,9 @@ interface Config {
     numberOfPellets: number;
     respawnAllPellets: boolean;
     speed: number;
-    boardSize: number;
+    boardSize: number; // Board size must be odd.
     wrap: boolean;
+    viewport?: number; // Viewport (if specified) must be odd and greater than board size.
 }
 
 export type GameMode =
@@ -64,9 +65,10 @@ export const gameModeConfig: Record<GameMode, Config> = {
     infinity: {
         numberOfPellets: 1,
         respawnAllPellets: true,
-        speed: 100,
-        boardSize: 15,
+        speed: 85,
+        boardSize: 25,
         wrap: true,
+        viewport: 15,
     },
 };
 

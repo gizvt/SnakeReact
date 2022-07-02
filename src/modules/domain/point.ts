@@ -20,6 +20,28 @@ export class Point {
         );
     }
 
+    isWithinViewport = (boardSize: number, viewport: number) => {
+        const edge = (boardSize - viewport) / 2;
+        const lowerLimit = 0 + edge;
+        const upperLimit = lowerLimit + viewport - 1;
+
+        return (
+            this.x >= lowerLimit &&
+            this.x <= upperLimit &&
+            this.y >= lowerLimit &&
+            this.y <= upperLimit
+        );
+    };
+
+    adjustToViewport(boardSize: number, viewport: number) {
+        if (viewport !== boardSize) {
+            const edge = (boardSize - viewport) / 2;
+            return new Point(this.x - edge, this.y - edge);
+        }
+
+        return new Point(this.x, this.y);
+    }
+
     move(direction: Direction) {
         let x = this.x;
         let y = this.y;

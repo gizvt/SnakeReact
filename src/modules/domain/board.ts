@@ -19,6 +19,22 @@ export class Board {
         );
     }
 
+    public getSnakePoints(viewport: number = this.size): Point[] {
+        return this.snake.points
+            .filter((point) => point.isWithinViewport(this.size, viewport))
+            .map((point) => point.adjustToViewport(this.size, viewport));
+    }
+
+    public getPelletPoints(viewport: number = this.size): Point[] {
+        return this.pellets
+            .filter((pellet) =>
+                pellet.point.isWithinViewport(this.size, viewport)
+            )
+            .map((pellet) =>
+                pellet.point.adjustToViewport(this.size, viewport)
+            );
+    }
+
     public moveSnake(direction: Direction) {
         this.snake.changeDirection(direction);
 

@@ -138,13 +138,13 @@ export function useGameState(gameMode: GameMode) {
     };
 
     function getNewBoardState() {
-        const snakeCoords = board.current.snake.points.map((point) =>
-            point.toString()
-        );
+        const snakeCoords = board.current
+            .getSnakePoints(config.current.viewport)
+            .map((point) => point.toString());
 
-        const pelletCoords = board.current.pellets.map((pellet) =>
-            pellet.point.toString()
-        );
+        const pelletCoords = board.current
+            .getPelletPoints(config.current.viewport)
+            .map((point) => point.toString());
 
         return {
             snakeCoords,
@@ -152,7 +152,8 @@ export function useGameState(gameMode: GameMode) {
         };
     }
 
-    const boardSize = config.current.boardSize;
+    // If the current mode has a viewport set, use that as the board size.
+    const boardSize = config.current.viewport || config.current.boardSize;
 
     return {
         boardSize,
