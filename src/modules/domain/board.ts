@@ -21,6 +21,7 @@ export class Board {
 
     public moveSnake(direction: Direction) {
         this.snake.changeDirection(direction);
+
         let newHeadPoint = this.getNewHeadPoint();
         this.snake.spawnNewHead(newHeadPoint);
 
@@ -54,6 +55,44 @@ export class Board {
             // (one on both of the pellets).
             this.snake.popTail();
         }
+
+        if (this.gameMode === "infinity") {
+            // Readjust the board to give the desired illusion.
+            this.shiftAllPoints(this.snake.direction.getOpposite());
+        }
+    }
+
+    private shiftAllPoints(direction: Direction) {
+        this.shiftPellets(direction);
+        this.shiftSnake(direction);
+    }
+
+    private shiftSnake(direction: Direction) {
+        this.snake.points.forEach((point, i) => {
+            const newPoint = point.move(direction);
+
+            if (this.config.wrap && newPoint.isOutOfBounds(this.size)) {
+                this.snake.points[i] = newPoint.wrap(direction, this.size);
+            } else {
+                this.snake.points[i] = newPoint;
+            }
+        });
+    }
+
+    private shiftPellets(direction: Direction) {
+        const newPelletPoints = this.pellets.map((pellet) => {
+            const newPelletPoint = pellet.point.move(direction);
+
+            if (this.config.wrap) {
+                return newPelletPoint.isOutOfBounds(this.size)
+                    ? newPelletPoint.wrap(direction, this.size)
+                    : newPelletPoint;
+            }
+
+            return newPelletPoint;
+        });
+
+        this.pellets = newPelletPoints.map((point) => new Pellet(point));
     }
 
     private getNewHeadPoint() {

@@ -23,6 +23,19 @@ export class Direction {
         return this.isOppositeTo(other) || this.isEqualTo(other);
     }
 
+    getOpposite() {
+        switch (this) {
+            case Direction.Down:
+                return Direction.Up;
+            case Direction.Up:
+                return Direction.Down;
+            case Direction.Left:
+                return Direction.Right;
+            default:
+                return Direction.Left;
+        }
+    }
+
     static fromKey(key: string) {
         return (
             this.AllDirections.find((d) => d.keys.some((k) => k === key)) ||

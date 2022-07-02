@@ -8,7 +8,13 @@ interface Config {
     wrap: boolean;
 }
 
-export type GameMode = "classic" | "wrap" | "portal" | "rebound" | "feast";
+export type GameMode =
+    | "classic"
+    | "wrap"
+    | "portal"
+    | "rebound"
+    | "feast"
+    | "infinity";
 
 export const allGameModes: GameMode[] = [
     "classic",
@@ -16,6 +22,7 @@ export const allGameModes: GameMode[] = [
     "portal",
     "rebound",
     "wrap",
+    "infinity",
 ];
 
 export const gameModeConfig: Record<GameMode, Config> = {
@@ -54,6 +61,13 @@ export const gameModeConfig: Record<GameMode, Config> = {
         boardSize: 15,
         wrap: false,
     },
+    infinity: {
+        numberOfPellets: 1,
+        respawnAllPellets: true,
+        speed: 100,
+        boardSize: 15,
+        wrap: true,
+    },
 };
 
 export const pelletEatenSounds: Record<GameMode, Sound> = {
@@ -62,6 +76,7 @@ export const pelletEatenSounds: Record<GameMode, Sound> = {
     portal: Sound.PortalTaken,
     rebound: Sound.Rebounded,
     feast: Sound.PelletEaten,
+    infinity: Sound.PelletEaten,
 };
 
 export function isGameMode(value: unknown): value is GameMode {
