@@ -69,7 +69,7 @@ export class Point {
     }
 
     static inCentreOf(boardSize: number): Point {
-        let centre = Math.ceil(boardSize / 2);
+        let centre = Math.ceil(boardSize / 2) - 1;
         return new Point(centre, centre);
     }
 

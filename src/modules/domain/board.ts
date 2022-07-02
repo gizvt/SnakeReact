@@ -102,9 +102,9 @@ export class Board {
         let centrePoint = Point.inCentreOf(this.size);
 
         const points = [
-            centrePoint.move(Direction.Left),
             centrePoint,
             centrePoint.move(Direction.Right),
+            centrePoint.move(Direction.Right).move(Direction.Right),
         ];
 
         this.snake = new Snake(points);
