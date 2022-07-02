@@ -63,8 +63,8 @@ export const gameModeConfig: Record<GameMode, Config> = {
         wrap: false,
     },
     infinity: {
-        numberOfPellets: 1,
-        respawnAllPellets: true,
+        numberOfPellets: 5,
+        respawnAllPellets: false,
         speed: 85,
         boardSize: 25,
         wrap: true,
