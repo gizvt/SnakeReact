@@ -20,19 +20,31 @@ export class Board {
     }
 
     public getSnakePoints(viewport: number = this.size): Point[] {
-        return this.snake.points
-            .filter((point) => point.isWithinViewport(this.size, viewport))
-            .map((point) => point.adjustToViewport(this.size, viewport));
+        // Not sure if this check speeds much up, but it's here anyway.
+        if (viewport !== this.size) {
+            // Adjust the points to fit inside of the viewport.
+            return this.snake.points
+                .filter((point) => point.isWithinViewport(this.size, viewport))
+                .map((point) => point.adjustToViewport(this.size, viewport));
+        }
+
+        return this.snake.points;
     }
 
     public getPelletPoints(viewport: number = this.size): Point[] {
-        return this.pellets
-            .filter((pellet) =>
-                pellet.point.isWithinViewport(this.size, viewport)
-            )
-            .map((pellet) =>
-                pellet.point.adjustToViewport(this.size, viewport)
-            );
+        // Not sure if this check speeds much up, but it's here anyway.
+        if (viewport !== this.size) {
+            // Adjust the points to fit inside of the viewport.
+            return this.pellets
+                .filter((pellet) =>
+                    pellet.point.isWithinViewport(this.size, viewport)
+                )
+                .map((pellet) =>
+                    pellet.point.adjustToViewport(this.size, viewport)
+                );
+        }
+
+        return this.pellets.map((pellet) => pellet.point);
     }
 
     public moveSnake(direction: Direction) {
