@@ -68,8 +68,22 @@ export class Snake {
             this._direction = Direction.Left;
         } else if (penultimate.move(Direction.Up).equals(tail)) {
             this._direction = Direction.Up;
-        } else {
+        } else if (penultimate.move(Direction.Down).equals(tail)) {
             this._direction = Direction.Down;
+            // If we fall through to either of these, wrap is enabled and the
+            // tail and penultimate are on opposite sides of the board.
+        } else if (tail.y === penultimate.y) {
+            // Tail is on the LEFT or RIGHT.
+            this._direction =
+                tail.x > penultimate.x
+                    ? Direction.Left // Tail is on the RIGHT.
+                    : Direction.Right; // Tail is on the LEFT.
+        } else if (tail.x === penultimate.x) {
+            // Tail is on the TOP or BOTTOM.
+            this._direction =
+                tail.y > penultimate.y
+                    ? Direction.Up // Tail is on the BOTTOM.
+                    : Direction.Down; // Tail is on the TOP.
         }
     }
 
