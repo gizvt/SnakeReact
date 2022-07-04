@@ -65,7 +65,7 @@ export class Point {
     }
 
     wrap(direction: Direction, boardSize: number): Point {
-        if (!this.isOutOfBounds) {
+        if (!this.isOutOfBounds(boardSize)) {
             return this;
         }
 
