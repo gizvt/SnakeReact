@@ -62,28 +62,29 @@ export class Snake {
         const tail = this.peekTail();
         const penultimate = this.peekPenultimate();
 
-        if (penultimate.move(Direction.Right).equals(tail)) {
-            this._direction = Direction.Right;
-        } else if (penultimate.move(Direction.Left).equals(tail)) {
-            this._direction = Direction.Left;
-        } else if (penultimate.move(Direction.Up).equals(tail)) {
-            this._direction = Direction.Up;
-        } else if (penultimate.move(Direction.Down).equals(tail)) {
-            this._direction = Direction.Down;
-            // If we fall through to either of these, wrap is enabled and the
-            // tail and penultimate are on opposite sides of the board.
-        } else if (tail.y === penultimate.y) {
-            // Tail is on the LEFT or RIGHT.
-            this._direction =
-                tail.x > penultimate.x
-                    ? Direction.Left // Tail is on the RIGHT.
-                    : Direction.Right; // Tail is on the LEFT.
-        } else if (tail.x === penultimate.x) {
-            // Tail is on the TOP or BOTTOM.
-            this._direction =
-                tail.y > penultimate.y
-                    ? Direction.Up // Tail is on the BOTTOM.
-                    : Direction.Down; // Tail is on the TOP.
+        // If moving the tail in one direction finds a match, the points are
+        // adjacent. If it does not, then wrap is enabled and they are on
+        // opposite sides of the board.
+        if (tail.isInSameRowAs(penultimate)) {
+            if (tail.move(Direction.Left).equals(penultimate)) {
+                this._direction = Direction.Right;
+            } else if (tail.move(Direction.Right).equals(penultimate)) {
+                this._direction = Direction.Left;
+            } else if (tail.x > penultimate.x) {
+                this._direction = Direction.Left;
+            } else {
+                this._direction = Direction.Right;
+            }
+        } else if (tail.isInSameColumnAs(penultimate)) {
+            if (tail.move(Direction.Up).equals(penultimate)) {
+                this._direction = Direction.Down;
+            } else if (tail.move(Direction.Down).equals(penultimate)) {
+                this._direction = Direction.Up;
+            } else if (tail.y > penultimate.y) {
+                this._direction = Direction.Up;
+            } else {
+                this._direction = Direction.Down;
+            }
         }
     }
 

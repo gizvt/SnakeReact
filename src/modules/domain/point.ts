@@ -33,6 +33,14 @@ export class Point {
         );
     };
 
+    isInSameRowAs(other: Point) {
+        return this.y === other.y;
+    }
+
+    isInSameColumnAs(other: Point) {
+        return this.x === other.x;
+    }
+
     adjustToViewport(boardSize: number, viewport: number) {
         if (viewport !== boardSize) {
             const edge = (boardSize - viewport) / 2;
