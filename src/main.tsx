@@ -3,17 +3,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./site.css";
 import React from "react";
 import { Container } from "react-bootstrap";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import { App } from "./App";
 
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <HashRouter>
             <Container fluid>
                 <App />
             </Container>
         </HashRouter>
-    </React.StrictMode>,
-    document.getElementById("root")
+    </React.StrictMode>
 );

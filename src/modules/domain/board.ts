@@ -7,7 +7,15 @@ import { Snake } from "./snake";
 export class Board {
     public snake: Snake = new Snake([]);
     public pellets: Pellet[] = [];
-    private config = gameModeConfig[this.gameMode];
+
+    get config() {
+        // After converting to Vite, the original syntax stopped working. Not
+        // sure if this is an issue with the way Vite compiles the TypeScript
+        // into JavaScript? Anyway, instead of:
+        // private config = gameModeConfig[this.gameMode], it is now a getter
+        // instead. Without this change, this.config would be undefined.
+        return gameModeConfig[this.gameMode];
+    }
 
     constructor(public readonly size: number, private gameMode: GameMode) {}
 
@@ -145,7 +153,7 @@ export class Board {
         const alreadySpawned = (newPoint: Point) =>
             pellets.some((pellet) => pellet.point.equals(newPoint));
 
-        // If respawnAllPellets is false, kepp any pellets that do not occupy
+        // If respawnAllPellets is false, keep any pellets that do not occupy
         // the same point as the snake's head (that one has just been eaten).
         let pellets: Pellet[] = this.config.respawnAllPellets
             ? []

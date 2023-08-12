@@ -2,11 +2,11 @@
 
 ## Running
 
-Do `npm install` then `npm start`.
+Do `npm install` then `npm run dev`.
 
 ## Debugging
 
-Open VS Code, start the app with `npm start`, then press `F5`.
+Open VS Code, start the app with `npm run dev`, then press `F5` to start debugging.
 
 ## Adding a new game mode
 
